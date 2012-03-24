@@ -91,13 +91,11 @@ public class UnpackAdtMojoTest {
     }
 
     private File getUnpackDir(String path) throws IOException {
-
-        File unpackDir = FileUtils.resolveFile(wd, path);
-
-        if (unpackDir.exists())
-            FileUtils.cleanDirectory(unpackDir);
-
-        unpackDir.mkdirs();
-        return unpackDir;
+        File f = FileUtils.resolveFile(wd, path);
+        if (f.exists()) {
+            FileUtils.cleanDirectory(f);
+            f.delete();
+        }
+        return f;
     }
 }

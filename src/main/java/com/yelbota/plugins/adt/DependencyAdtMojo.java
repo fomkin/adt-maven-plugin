@@ -45,7 +45,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
         } else {
 
-            getLog().info("No plugin dependency defined.");
+            getLog().debug("No plugin dependency defined.");
 
             if (sdkVersion == null) {
                 String message = "sdkVersion or plugin dependency must be defined";
@@ -81,7 +81,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
                     throw failWith(message);
                 }
             }
-            else getLog().warn("Can't resolve air_sdk dependency. repositorySystem unavailable");
+            else getLog().error("Can't resolve air_sdk dependency. repositorySystem unavailable");
 
             return sdkArtifact;
         }

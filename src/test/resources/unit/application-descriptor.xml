@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.1">
+
+    <id>com.yelbota.plugins.adtmavenplugin.it.application</id>
+    <filename>Application</filename>
+    <name>My Application</name>
+    <versionNumber>0</versionNumber>
+    <versionLabel>0</versionLabel>
+
+    <initialWindow>
+        <content>Application.swf</content>
+    </initialWindow>
+
+<!--
+    <icon>
+        <image72x72>/icons/icon_Provit_Launcher_1-1-dmitriev.png</image72x72>
+    </icon>
+-->
+
+    <android>
+        <manifestAdditions>
+            <![CDATA[
+            <manifest android:installLocation="auto">
+                <uses-permission android:name="android.permission.INTERNET"/>
+            </manifest>
+            ]]>
+        </manifestAdditions>
+
+    </android>
+
+</application>

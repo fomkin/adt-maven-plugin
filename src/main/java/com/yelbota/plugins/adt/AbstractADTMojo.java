@@ -24,7 +24,7 @@ abstract public class AbstractAdtMojo extends AbstractMojo {
      * @readonly
      * @required
      */
-    protected List<Artifact> pluginArtifacts;
+    public List<Artifact> pluginArtifacts;
 
     /**
      * @parameter expression="${localRepository}"
@@ -47,10 +47,6 @@ abstract public class AbstractAdtMojo extends AbstractMojo {
      * @required
      */
     protected File outputDirectory;
-
-    public void setPluginArtifacts(List<Artifact> pluginArtifacts) {
-        this.pluginArtifacts = pluginArtifacts;
-    }
 
     protected MojoFailureException failWith(String msg) {
         return new MojoFailureException(this, msg, msg);

@@ -26,7 +26,7 @@ public class DependencyAdtMojoTest {
         artifactList.add(stub);
 
         DependencyAdtMojo adtMojo = new DependencyAdtMojo();
-        adtMojo.setPluginArtifacts(artifactList);
+        adtMojo.pluginArtifacts = artifactList;
         Assert.assertNotNull(adtMojo.getAirSdkArtifact());
     }
 
@@ -45,7 +45,7 @@ public class DependencyAdtMojoTest {
         artifactList.add(stub);
 
         DependencyAdtMojo adtMojo = new DependencyAdtMojo();
-        adtMojo.setPluginArtifacts(artifactList);
+        adtMojo.pluginArtifacts = artifactList;
 
         try {
             adtMojo.getAirSdkArtifact();

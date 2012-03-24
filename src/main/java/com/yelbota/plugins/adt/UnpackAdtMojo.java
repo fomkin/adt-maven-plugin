@@ -2,6 +2,7 @@ package com.yelbota.plugins.adt;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,13 +20,18 @@ import java.util.zip.ZipInputStream;
  */
 public class UnpackAdtMojo extends DependencyAdtMojo {
 
+    protected File sdkDirectory;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         File artifactFile = getAirSdkArtifact().getFile();
         File unpackDir = new File(System.getProperty("java.io.tmpdir"), "air_sdk_" + sdkVersion);
 
-        unpackTo(unpackDir, artifactFile);
+        List<String> unpackedFiles = unpackTo(unpackDir, artifactFile);
+        setExecutable(unpackDir, unpackedFiles);
+
+        sdkDirectory = unpackDir;
     }
 
     /**
@@ -40,6 +46,16 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
         List<String> result = new ArrayList<String>();
 
         if (unpackDir.exists() && unpackDir.isDirectory()) {
+
+            getLog().debug("AIR SDK already unpacked");
+
+        } else {
+
+            if (unpackDir.exists()) {
+                unpackDir.delete();
+            }
+
+            unpackDir.mkdirs();
 
             try {
 
@@ -78,10 +94,7 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
                 }
 
             } catch (IOException e) {
-                throw failWith("An error occurred during SDK unpacking", e.getLocalizedMessage());
             }
-        } else {
-            getLog().info("AIR SDK already unpacked");
         }
 
         return result;
