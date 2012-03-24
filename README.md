@@ -45,10 +45,86 @@ Add repository with plugin and sdk artifacts to your POM
 
 Add adt-maven-plugin into plugins section
 
+    <plugin>
+    
+        <groupId>com.yelbota.plugins</groupId>
+        <artifactId>adt-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        
+        <executions>
+          <execution>
+            <goals>
+                <goal>package</goal>
+            </goals>
+          </execution>
+        </executions>
+        
+        <configuration>
+        
+            <sdkVersion>3.2-RC1</sdkVersion>
+            <target>ipa-debug</target>
+            <keystore>certificate.p12</keystore>
+            <storepass>******</storepass>
+            
+            <!-- Required for ipa* targets -->
+            <provisioningProfile>myapp.mobileprovision</provisioningProfile>
+            
+            <!-- 
+                 Optional. Application descriptor. By default is 
+                 src/main/resources/application-descriptor.xml
+            -->
+            <descriptor>src/main/flex/Project-app.xml</descriptor>
+            
+            <!-- 
+                 Optional. Replaces versionNumber in application descriptor. Useful
+                 for CI. 0.0.0 by default. 
+            -->
+            <versionNumber>${build.number}</versionNumber>
+            
+            <!-- 
+                 Optional. Replaces versionLabel in application descriptor. 
+                 ${project.version} by default.
+             -->
+            <versionLabel>${project.version}</versionLabel>
+            
+            <!-- 
+                 By default includes lookedup in target/classes directory. Usualy
+                 maven-resources-plugin copy here content of src/main/resources.
+                 You can change this behaviour by setting <includesRoot> property. 
+            -->
+            <includes>
+                <include>icons</include>
+            </includes>
+            
+        </configuration>
+    </plugin>
+
+You can configure signing with adt.build.keystore, adt.build.storepass and adt.buid.mobileprovision properties. 
+
+    mvn package -Dadt.build.keystore=certificate.p12 -Dadt.build.storepass=******
+
+If you want to use your own SDK package, place it into plugin dependencies. Be aware, that AIR SDK is platform dependent.
+
+    <plugin>
+        <groupId>com.yelbota.plugins</groupId>
+        <artifactId>adt-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <dependencies>
+            <dependency>
+                <groupId>com.adobe.air</groupId>
+                <artifactId>air-sdk</artifactId>
+                <version>3.1</version>
+                <type>zip</type>
+                <classifier>${os.family}</classifier>
+            </dependency>
+        </dependencies>
+        ...
+    </plugin>
     
 Foreign resources:
 
 * [Apache Maven](http://maven.apache.org)
 * [Flexmojos](http://flexmojos.sonatype.org/)
+* [Building Adobe AIR Applications](http://help.adobe.com/en_US/air/build/air_buildingapps.pdf)
 
 [1]: http://www.sparrow-framework.org
