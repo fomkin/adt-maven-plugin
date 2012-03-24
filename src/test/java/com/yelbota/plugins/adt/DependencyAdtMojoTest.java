@@ -2,21 +2,14 @@ package com.yelbota.plugins.adt;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.stubs.ArtifactStub;
-import org.testng.annotations.BeforeTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DependencyAdtMojoTest extends AbstractMojoTestCase {
-
-    @BeforeTest
-
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+public class DependencyAdtMojoTest {
 
     @Test
 
@@ -34,7 +27,7 @@ public class DependencyAdtMojoTest extends AbstractMojoTestCase {
 
         DependencyAdtMojo adtMojo = new DependencyAdtMojo();
         adtMojo.setPluginArtifacts(artifactList);
-        assertNotNull(adtMojo.getAirSdkArtifact());
+        Assert.assertNotNull(adtMojo.getAirSdkArtifact());
     }
 
     @Test
@@ -56,9 +49,8 @@ public class DependencyAdtMojoTest extends AbstractMojoTestCase {
 
         try {
             adtMojo.getAirSdkArtifact();
-            fail("no dependency or sdk-version defined");
-        }
-        catch (MojoFailureException e) {
+            Assert.fail("no dependency or sdk-version defined");
+        } catch (MojoFailureException e) {
             // Ok. This is correct behaviour
         }
     }

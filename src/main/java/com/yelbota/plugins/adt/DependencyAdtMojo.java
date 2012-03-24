@@ -40,6 +40,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
         if (sdkArtifact != null) {
 
+            sdkVersion = sdkArtifact.getVersion();
             return sdkArtifact;
 
         } else {
@@ -48,7 +49,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
             if (sdkVersion == null) {
                 String message = "sdkVersion or plugin dependency must be defined";
-                throw new MojoFailureException(this, message, message);
+                throw failWith(message);
             }
 
             if (repositorySystem != null) {
@@ -77,7 +78,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
                     }
 
                     String message = "Failed to resolve artifact " + sdkArtifact;
-                    throw new MojoFailureException(this, message, message);
+                    throw failWith(message);
                 }
             }
             else getLog().warn("Can't resolve air_sdk dependency. repositorySystem unavailable");
@@ -97,8 +98,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
         else if (osName.indexOf("mac") > -1)
             return "mac";
         else {
-            String message = fullName + " is not supported";
-            throw new MojoFailureException(this, message, message);
+            throw failWith(fullName + " is not supported");
         }
     }
 

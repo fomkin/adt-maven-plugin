@@ -52,4 +52,12 @@ abstract public class AbstractAdtMojo extends AbstractMojo {
         this.pluginArtifacts = pluginArtifacts;
     }
 
+    protected MojoFailureException failWith(String msg) {
+        return new MojoFailureException(this, msg, msg);
+    }
+
+    protected MojoFailureException failWith(String msg, String fullMsg) {
+        return new MojoFailureException(this, msg, fullMsg);
+    }
+
 }
