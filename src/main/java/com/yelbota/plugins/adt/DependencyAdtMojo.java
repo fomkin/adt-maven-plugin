@@ -8,7 +8,6 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * @goal dependency
- * @phase package
  * @threadSafe
  */
 public class DependencyAdtMojo extends AbstractAdtMojo {

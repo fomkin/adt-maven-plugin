@@ -15,7 +15,6 @@ import java.util.zip.ZipInputStream;
 
 /**
  * @goal unpack
- * @phase package
  * @threadSafe
  */
 public class UnpackAdtMojo extends DependencyAdtMojo {

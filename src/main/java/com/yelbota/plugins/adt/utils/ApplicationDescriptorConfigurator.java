@@ -11,10 +11,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 
 public class ApplicationDescriptorConfigurator {
 
@@ -87,7 +84,7 @@ public class ApplicationDescriptorConfigurator {
         format.setIndent(2);
 
         try {
-            Writer out = new FileWriter(outputFile);
+            FileOutputStream out = new FileOutputStream(outputFile);
             XMLSerializer serializer = new XMLSerializer(out, format);
             serializer.serialize(dom);
         } catch (IOException e) {

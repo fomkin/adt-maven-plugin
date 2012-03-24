@@ -3,7 +3,7 @@
 
     <id>com.yelbota.plugins.adtmavenplugin.it.application</id>
     <filename>Application</filename>
-    <name>My Application</name>
+    <name>My Application (UFT8 проверка)</name>
     <versionNumber>0</versionNumber>
     <versionLabel>0</versionLabel>
 
