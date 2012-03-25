@@ -4,27 +4,28 @@ Build Adobe AIR applications with your Maven!
 General purpose
 ---------------
 
-Some time ago, Adobe released AIR for mobile devices. The latest versions (such as 3.2) appear in box suitable for industrial use. Was the question: how to package AIR-application automatically? Flexmojos allows you to build only *.air packages, so I decided to write a plugin that could work with platform dependent AIR SDK and build packages for mobile devices too.
+Some time ago, Adobe released AIR for mobile devices. The latest versions (such as 3.2) become suitable for industrial use. Was the question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
 Current status (1.0.0)
 ----------------------
 
 * Building AIR, APK, IPA packages
 * Simple configuration
-* No need to install SDK. Plugin downloads it as dependency 
+* No need installing SDK. Plugin downloads it as dependency 
  
 Plans
 --------------------------------------------
 
+=======
+* Building native desktop packages (exe, dmg)
 * Adobe Native Extensions support
-* "Install" mojo
-* Bilding native desktop packages (exe, dmg)
+* Install to device mojo
 * Linux SDK artifact working over wine (just for fun :)
 
 Quick start
 -----------------------------------------------
 
-Add repository with plugin and sdk artifacts to your POM
+Add repository with plugin and SDK artifacts into your POM
 
     <pluginRepositories>
         <pluginRepository>
@@ -44,7 +45,7 @@ Add repository with plugin and sdk artifacts to your POM
         </repository>
     </repositories>
 
-Add adt-maven-plugin into plugins section
+Add `adt-maven-plugin` into plugins section
 
     <plugin>
     
@@ -100,7 +101,7 @@ Add adt-maven-plugin into plugins section
         </configuration>
     </plugin>
 
-You can configure signing with adt.build.keystore, adt.build.storepass and adt.buid.mobileprovision properties. 
+You can configure signing with `adt.build.keystore`, `adt.build.storepass` and `adt.buid.mobileprovision` properties. 
 
     mvn package -Dadt.build.keystore=certificate.p12 -Dadt.build.storepass=******
 
