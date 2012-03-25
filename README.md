@@ -16,8 +16,9 @@ Current status (1.0.0)
 Plans
 --------------------------------------------
 
-* Bilding native desktop packages (exe, dmg)
 * Adobe Native Extensions support
+* "Install" mojo
+* Bilding native desktop packages (exe, dmg)
 * Linux SDK artifact working over wine (just for fun :)
 
 Quick start
