@@ -2,10 +2,19 @@ package com.yelbota.plugins.adt;
 
 import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import junit.framework.Assert;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.testing.stubs.ArtifactStub;
+import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.codehaus.plexus.util.FileUtils;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class PackageAdtMojoTest {
 
@@ -36,8 +45,54 @@ public class PackageAdtMojoTest {
         }
     }
 
-    private void commonRequiredCertificateTest(PackageAdtMojo mojo)
-    {
+    @Test
+    public void prepareAneDirTest() throws MojoFailureException {
+
+        Set<Artifact> artifactList = new HashSet<Artifact>();
+
+        ArtifactStub stub = new ArtifactStub();
+        stub.setGroupId("com.example");
+        stub.setArtifactId("myExt1");
+        stub.setVersion("1.0");
+        stub.setType("ane");
+        stub.setFile(FileUtils.resolveFile(wd, "src/test/resources/unit/myExt1-1.0.ane"));
+        artifactList.add(stub);
+
+        stub = new ArtifactStub();
+        stub.setGroupId("com.example");
+        stub.setArtifactId("myLib");
+        stub.setVersion("1.0");
+        stub.setType("swc");
+        artifactList.add(stub);
+
+        stub = new ArtifactStub();
+        stub.setGroupId("com.example");
+        stub.setArtifactId("myExt2");
+        stub.setVersion("1.1");
+        stub.setType("ane");
+        stub.setFile(FileUtils.resolveFile(wd, "src/test/resources/unit/myExt2-1.1.ane"));
+        artifactList.add(stub);
+
+        PackageAdtMojo mojo = new PackageAdtMojo();
+        mojo.outputDirectory = FileUtils.resolveFile(wd, "target/unit/extDirTest");
+        mojo.outputDirectory.mkdirs();
+        mojo.project = new MavenProjectStub();
+        mojo.project.setDependencyArtifacts(artifactList);
+
+        File dir = mojo.prepareAneDir();
+
+        String[] dirList = dir.list();
+        String[] pattern = new String[]{"myExt1-1.0.ane", "myExt2-1.1.ane"};
+
+        Assert.assertTrue(dir.exists());
+        Assert.assertEquals(dirList.length, pattern.length);
+
+        for (int i = 0; i < pattern.length; i++) {
+            Assert.assertEquals(dirList[i], pattern[i]);
+        }
+    }
+
+    private void commonRequiredCertificateTest(PackageAdtMojo mojo) {
         mojo.storetype = "pkcs12";
         mojo.keystore = FileUtils.resolveFile(wd, "src/test/resources/unit/certificate.p12");
         mojo.storepass = "password";

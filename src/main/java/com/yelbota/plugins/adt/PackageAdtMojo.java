@@ -2,8 +2,10 @@ package com.yelbota.plugins.adt;
 
 import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import com.yelbota.plugins.adt.utils.ApplicationDescriptorConfigurator;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.BufferedReader;
@@ -19,6 +21,11 @@ import java.util.List;
  * @threadSafe
  */
 public class PackageAdtMojo extends UnpackAdtMojo {
+
+    /**
+     * @parameter default-value="${project}
+     */
+    public MavenProject project;
 
     /**
      * ADT package target. available:
@@ -138,6 +145,7 @@ public class PackageAdtMojo extends UnpackAdtMojo {
 
         File adtFile = FileUtils.resolveFile(sdkDirectory, "lib/adt.jar");
         File finalAppDescriptor = getFinalApplicationDescriptor();
+        File aneDir = prepareAneDir();
         List<String> args = new ArrayList<String>();
 
         args.add("java");
@@ -147,6 +155,9 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         args.addAll(getCertificateArguments());
         args.addAll(getMainArgs(finalAppDescriptor));
         args.addAll(getIncludesArgs());
+
+        if (aneDir.list().length > 0)
+            args.addAll(getExtDirArguments(aneDir));
 
         try {
 
@@ -162,12 +173,12 @@ public class PackageAdtMojo extends UnpackAdtMojo {
                 BufferedReader b = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 while ((line = b.readLine()) != null)
-                      adtOutput += line + "\n";
+                    adtOutput += line + "\n";
 
                 // Oops.
                 throw failWith(
                         "Adt can't build the package. Error code #" + code +
-                        ". Checkout official documentation here http://help.adobe.com/en_US/air/build/air_buildingapps.pdf",
+                                ". Checkout official documentation here http://help.adobe.com/en_US/air/build/air_buildingapps.pdf",
                         adtOutput
                 );
             }
@@ -191,6 +202,31 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         configurator.printToFile(mutatedDescriptor);
 
         return mutatedDescriptor;
+    }
+
+    public File prepareAneDir() throws MojoFailureException {
+
+        try {
+
+            File dir = new File(outputDirectory, "extDir");
+
+            if (dir.exists())
+                FileUtils.cleanDirectory(dir);
+            else dir.mkdir();
+
+            for (Artifact artifact : project.getDependencyArtifacts()) {
+                if (artifact.getType().equals("ane")) {
+                    FileUtils.copyFileToDirectory(artifact.getFile(), dir);
+                }
+            }
+
+            return dir;
+
+        } catch (IOException e) {
+
+            throw failWith("Can't create ANE directory");
+        }
+
     }
 
     public List<String> getPackageArguments() {
@@ -223,6 +259,13 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         args.add(storepass);
 
         return args;
+    }
+
+    public List<String> getExtDirArguments(File extDir) {
+        List<String> result = new ArrayList<String>();
+        result.add("-extdir");
+        result.add(extDir.getAbsolutePath());
+        return result;
     }
 
     /**
@@ -347,4 +390,5 @@ public class PackageAdtMojo extends UnpackAdtMojo {
     private boolean isAndroidTarget() {
         return target.indexOf("apk") > -1;
     }
+
 }
