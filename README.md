@@ -6,10 +6,11 @@ General purpose
 
 Some time ago, Adobe released AIR for mobile devices. The latest versions (such as 3.2) become suitable for industrial use. Was the question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
-Current status (1.0.0)
+Current status (1.0.1)
 ----------------------
 
 * Building AIR, APK, IPA packages
+* Adobe Native Extensions (ANE) support
 * Simple configuration
 * No need installing SDK. Plugin downloads it as dependency 
  
@@ -18,7 +19,6 @@ Plans
 
 =======
 * Building native desktop packages (exe, dmg)
-* Adobe Native Extensions support
 * Install to device mojo
 * Linux SDK artifact working over wine (just for fun :)
 
