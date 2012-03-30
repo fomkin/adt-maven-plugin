@@ -1,7 +1,9 @@
 package com.yelbota.plugins.adt;
 
 import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
-import com.yelbota.plugins.adt.utils.ApplicationDescriptorConfigurator;
+import com.yelbota.plugins.adt.model.AneModel;
+import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
+import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -144,8 +146,8 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         validateConfiguration();
 
         File adtFile = FileUtils.resolveFile(sdkDirectory, "lib/adt.jar");
-        File finalAppDescriptor = getFinalApplicationDescriptor();
         File aneDir = prepareAneDir();
+        File finalAppDescriptor = getFinalApplicationDescriptor(getExtensionsIds(aneDir));
         List<String> args = new ArrayList<String>();
 
         args.add("java");
@@ -191,14 +193,27 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         }
     }
 
-    private File getFinalApplicationDescriptor() throws MojoFailureException {
+    private List<String> getExtensionsIds(File aneDir) throws MojoFailureException {
 
-        ApplicationDescriptorConfigurator configurator = new ApplicationDescriptorConfigurator(descriptor);
+        List<String> result = new ArrayList<String>();
+
+        for (String name: aneDir.list()) {
+            AneModel model = new AneModel(new File(aneDir, name));
+            result.add(model.getId());
+        }
+
+        return result;
+    }
+
+    private File getFinalApplicationDescriptor(List<String> extensionsIds) throws MojoFailureException {
+
+        ApplicationDescriptorModel configurator = new ApplicationDescriptorModel(descriptor);
         File mutatedDescriptor = FileUtils.resolveFile(outputDirectory, "application-descriptor.xml");
 
         configurator.setContent(applicationContent.getName());
         configurator.setVersionLabel(versionLabel);
         configurator.setVersionNumber(versionNumber);
+        configurator.setExtensionIds(extensionsIds);
         configurator.printToFile(mutatedDescriptor);
 
         return mutatedDescriptor;

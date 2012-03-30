@@ -51,7 +51,7 @@ Add `adt-maven-plugin` into plugins section
     
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         
         <executions>
           <execution>

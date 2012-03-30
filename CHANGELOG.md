@@ -1,7 +1,7 @@
 adt-maven-plugin changelog
 ===================
 
-Version 1.0.1 (29.03.2012)
+Version 1.0.1 (30.03.2012)
 ------------------------
 
 - ANE support

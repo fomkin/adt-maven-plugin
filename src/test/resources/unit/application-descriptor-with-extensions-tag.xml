@@ -11,6 +11,11 @@
         <content>Application.swf</content>
     </initialWindow>
 
+    <extensions>
+        <extensionID>com.adobe.Vibration</extensionID>
+        <extensionID>com.adobe.Vibration1</extensionID>
+    </extensions>
+
     <android>
         <manifestAdditions>
             <![CDATA[
