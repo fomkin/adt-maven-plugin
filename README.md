@@ -122,7 +122,21 @@ If you want to use your own SDK package, place it into plugin dependencies. Be a
         </dependencies>
         ...
     </plugin>
+
+AIR Native Extensions support
+-----------------------------------------------
     
+ANE support designed in true maven style. Just deploy your extension to maven repository and add dependency. You don't need to include `<extensions>` section in application descriptor. It will be done automatically.
+
+    <dependency>
+        <groupId>com.adobe.extensions</groupId>
+        <artifactId>vibration</artifactId>
+        <version>1.0</version>
+        <type>ane</type>
+    </dependency>
+
+Note that Flexmojos doesn't support ANE dependencies at this moment (30.03.2012), so you can deploy your ANE with `ane` and `swc` packagings, and add they to dependencies both. Another way: use my experimental Flexmojos fork version `4.3-beta-y1` (available in my repo). 
+
 Foreign resources:
 
 * [Apache Maven](http://maven.apache.org)
