@@ -4,9 +4,9 @@ Build Adobe AIR applications with your Maven!
 General purpose
 ---------------
 
-Some time ago, Adobe released AIR for mobile devices. The latest versions (such as 3.2) become suitable for industrial use. Was the question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
+Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
-Current status (1.0.1)
+Current status (1.0.2)
 ----------------------
 
 * Building AIR, APK, IPA packages
@@ -17,7 +17,6 @@ Current status (1.0.1)
 Plans
 --------------------------------------------
 
-=======
 * Building native desktop packages (exe, dmg)
 * Install to device mojo
 * Linux SDK artifact working over wine (just for fun :)
@@ -51,7 +50,7 @@ Add `adt-maven-plugin` into plugins section
     
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         
         <executions>
           <execution>

@@ -25,7 +25,7 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         File artifactFile = getAirSdkArtifact().getFile();
-        File unpackDir = new File(System.getProperty("java.io.tmpdir"), "air_sdk_" + sdkVersion);
+        File unpackDir = new File(outputDirectory, "air_sdk_" + sdkVersion);
 
         List<String> unpackedFiles = unpackTo(unpackDir, artifactFile);
         setExecutable(unpackDir, unpackedFiles);

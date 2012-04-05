@@ -248,9 +248,19 @@ public class PackageAdtMojo extends UnpackAdtMojo {
 
         List<String> args = new ArrayList<String>();
 
-        args.add("-package");
-        args.add("-target");
-        args.add(target);
+        if (isUnsignedAirTarget()) {
+
+            args.add("-prepare");
+        }
+        else {
+
+            args.add("-package");
+
+            if (!isAirTarget()) {
+                args.add("-target");
+                args.add(target);
+            }
+        }
 
         return args;
     }
@@ -259,19 +269,22 @@ public class PackageAdtMojo extends UnpackAdtMojo {
 
         List<String> args = new ArrayList<String>();
 
-        if (getProvisioningProfileRequired()) {
-            args.add("-provisioning-profile");
-            args.add(provisioningProfile.getAbsolutePath());
+        if (!isUnsignedAirTarget()) {
+
+            if (getProvisioningProfileRequired()) {
+                args.add("-provisioning-profile");
+                args.add(provisioningProfile.getAbsolutePath());
+            }
+
+            args.add("-storetype");
+            args.add(storetype);
+
+            args.add("-keystore");
+            args.add(keystore.getAbsolutePath());
+
+            args.add("-storepass");
+            args.add(storepass);
         }
-
-        args.add("-storetype");
-        args.add(storetype);
-
-        args.add("-keystore");
-        args.add(keystore.getAbsolutePath());
-
-        args.add("-storepass");
-        args.add(storepass);
 
         return args;
     }

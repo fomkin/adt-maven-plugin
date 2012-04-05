@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.fomkingames.common</groupId>
+        <artifactId>flex4-parent</artifactId>
+        <version>1.2.6</version>
+    </parent>
+
+    <groupId>com.yelbota.plugins.adt-maven-plugin.it</groupId>
+    <artifactId>package-air</artifactId>
+    <packaging>swf</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.flexmojos</groupId>
+                <artifactId>flexmojos-maven-plugin</artifactId>
+                <configuration>
+                    <sourceFile>Application.as</sourceFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>com.yelbota.plugins</groupId>
+                <artifactId>adt-maven-plugin</artifactId>
+                <version>@pom.version@</version>
+                <configuration>
+                    <sdkVersion>3.2-RC1</sdkVersion>
+                    <target>air</target>
+                    <keystore>certificate.p12</keystore>
+                    <storepass>111</storepass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>air-framework</artifactId>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>flex-mojos-repository</id>
+            <url>http://repository.sonatype.org/content/groups/flexgroup</url>
+        </repository>
+        <repository>
+            <id>fomkingames.public.snapshot</id>
+            <name>fomkingames.public.snapshot</name>
+            <url>http://fomkingames-public-repository.googlecode.com/svn/release</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>fomkingames.public.release</id>
+            <name>fomkingames.public.release</name>
+            <url>http://fomkingames-public-repository.googlecode.com/svn/snapshot</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>flexis-local</id>
+            <url>http://artifactory.flexis.ru:8030/artifactory/flexis-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>yelbota-dropbox-repo</id>
+            <url>http://dl.dropbox.com/u/36020926/maven/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>yelbota-dropbox-repo</id>
+            <url>http://dl.dropbox.com/u/36020926/maven/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>flex-mojos-repository</id>
+            <url>http://repository.sonatype.org/content/groups/flexgroup</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>flexis-local</id>
+            <url>http://artifactory.flexis.ru:8030/artifactory/flexis-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

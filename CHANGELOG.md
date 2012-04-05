@@ -1,6 +1,12 @@
 adt-maven-plugin changelog
 ===================
 
+Version 1.0.2 (5.04.2012)
+------------------------
+
+- Abramov, you was right. Tmpdir sucks. Now SDK is unpacked to output directory (usually `target`).
+- Fix problems with `air` and `airi` targets. 
+
 Version 1.0.1 (30.03.2012)
 ------------------------
 
