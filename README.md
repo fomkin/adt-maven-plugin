@@ -102,9 +102,9 @@ Add `adt-maven-plugin` into plugins section
         </configuration>
     </plugin>
 
-You can configure signing with `adt.build.keystore`, `adt.build.storepass` and `adt.buid.mobileprovision` properties. 
+You can configure signing with `build.adt.keystore`, `build.adt.storepass` and `build.adt.mobileprovision` properties.
 
-    mvn package -Dadt.build.keystore=certificate.p12 -Dadt.build.storepass=******
+    mvn package -Dbuild.adt.keystore=certificate.p12 -Dbuild.adt.storepass=******
 
 If you want to use your own SDK package, place it into plugin dependencies. Be aware, that AIR SDK is platform dependent.
 
