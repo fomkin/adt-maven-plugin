@@ -1,17 +1,21 @@
 package com.yelbota.plugins.adt;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
+import org.codehaus.plexus.logging.console.ConsoleLoggerManager;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 /**
  * @goal unpack
@@ -19,17 +23,54 @@ import java.util.zip.ZipInputStream;
  */
 public class UnpackAdtMojo extends DependencyAdtMojo {
 
+    protected static ConsoleLoggerManager plexusLoggerManager = new ConsoleLoggerManager();
+
     protected File sdkDirectory;
+
+    private class CleanStream extends Thread {
+        InputStream is;
+        String type = null;
+        boolean typeSet = false;
+
+        CleanStream(InputStream is)//, String type)
+        {
+            this.is = is;
+            //this.type = type;
+        }
+        CleanStream(InputStream is, String type)
+        {
+            this.is = is;
+            this.type = type;
+            typeSet = true;
+        }
+
+        public void run()
+        {
+            try
+            {
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line=null;
+                while ( (line = br.readLine()) != null)
+                {
+                    if(typeSet) getLog().debug(type + "> " + line);
+                }
+            }
+            catch (IOException ioe)
+            {
+                ioe.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        File artifactFile = getAirSdkArtifact().getFile();
+        Artifact artifact = getAirSdkArtifact();
+        File artifactFile = artifact.getFile();
         File unpackDir = new File(outputDirectory, "air_sdk_" + sdkVersion);
 
-        List<String> unpackedFiles = unpackTo(unpackDir, artifactFile);
-        setExecutable(unpackDir, unpackedFiles);
-
+        unpackTo(unpackDir, artifactFile, artifact.getType());
         sdkDirectory = unpackDir;
     }
 
@@ -40,9 +81,7 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
      * @return
      * @throws MojoFailureException
      */
-    public List<String> unpackTo(File unpackDir, File artifactFile) throws MojoFailureException {
-
-        List<String> result = new ArrayList<String>();
+    public void unpackTo(File unpackDir, File artifactFile, String type) throws MojoFailureException {
 
         if (unpackDir.exists() && unpackDir.isDirectory()) {
 
@@ -56,62 +95,50 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
 
             unpackDir.mkdirs();
 
-            try {
+            if (type.equals(ZIP)) {
+                ZipUnArchiver unarchiver = new ZipUnArchiver(artifactFile);
 
-                ZipInputStream zip = new ZipInputStream(new FileInputStream(artifactFile));
-                ZipEntry entry = zip.getNextEntry();
-                byte[] buf = new byte[1024];
+                unarchiver.enableLogging(plexusLoggerManager.getLoggerForComponent(ROLE));
+                unarchiver.setDestDirectory(unpackDir);
+                unarchiver.extract();
 
-                while (entry != null) {
+            } else if (type.equals(TBZ2))  {
 
-                    String entryName = entry.getName()
-                            .replace('/', File.separatorChar)
-                            .replace('\\', File.separatorChar);
+                try
+                {
+                    // Java 6 doesn't support symlinks.
+                    ProcessBuilder builder = new ProcessBuilder(
+                            "tar",
+                            "-jxvf",
+                            artifactFile.getAbsolutePath(),
+                            "-C",
+                            unpackDir.getAbsolutePath()
+                    );
 
-                    File file = new File(unpackDir, entryName);
-                    result.add(entryName);
+                    getLog().debug(builder.command().toString());
+                    Process p = builder.start();
 
-                    if (entry.isDirectory()) {
+                    CleanStream cleanError = new CleanStream(p.getErrorStream(), "ERROR");
+                    CleanStream cleanOutput = new CleanStream(p.getInputStream(), "OUTPUT");
 
-                        if (!file.mkdirs())
-                            break;
+                    cleanError.start();
+                    cleanOutput.start();
 
-                        entry = zip.getNextEntry();
-                        continue;
-                    }
-
-                    FileOutputStream fileOut = new FileOutputStream(file);
-
-                    int n;
-                    while ((n = zip.read(buf, 0, 1024)) > -1) {
-                        fileOut.write(buf, 0, n);
-                    }
-
-                    fileOut.close();
-                    zip.closeEntry();
-                    entry = zip.getNextEntry();
+                    p.waitFor();
+                }
+                catch (IOException e)
+                {
+                    failWith("TBZ2 archives supported only on mac osx");
+                }
+                catch (InterruptedException e)
+                {
+                    failWith(e.getMessage());
                 }
 
-            } catch (IOException e) {
+            } else {
+                failWith("SDK archive type is not supported");
             }
-        }
 
-        return result;
-    }
-
-    /**
-     * Looking for a bin folders, and makes content executable.
-     * @param dir parent directory
-     * @param files list of file paths
-     */
-    public void setExecutable(File dir, List<String> files) {
-
-        for (String fileName : files) {
-
-            File file = new File(dir, fileName);
-
-            if (!file.isDirectory() && fileName.indexOf("bin") > -1)
-                file.setExecutable(true);
         }
     }
 }

@@ -18,6 +18,12 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
      */
     protected String sdkVersion;
 
+    public static final String ZIP = "zip";
+    public static final String TBZ2 = "tbz2";
+
+    public static final String OS_CLASSIFIER_WINDOWS = "windows";
+    public static final String OS_CLASSIFIER_MAC = "mac";
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         getAirSdkArtifact();
@@ -53,12 +59,14 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
             if (repositorySystem != null) {
 
+                String osClassifier = getOSClassifier();
+
                 sdkArtifact = repositorySystem.createArtifactWithClassifier(
                         "com.adobe.air",
                         "air-sdk",
                         sdkVersion,
-                        "zip",
-                        getOSClassifier()
+                        getSDKArtifactPackaging(sdkVersion, osClassifier),
+                        osClassifier
                 );
 
                 ArtifactResolutionRequest request = new ArtifactResolutionRequest();
@@ -87,15 +95,36 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
     }
 
+    public String getSDKArtifactPackaging(String sdkVersion, String osClassifier) throws MojoFailureException
+    {
+        sdkVersion = sdkVersion.replaceAll("[^\\d.]", "");
+        float version = Float.valueOf(sdkVersion);
+
+        if (version < 3.4) {
+            return ZIP;
+        }
+        else {
+            if (osClassifier.equals(OS_CLASSIFIER_WINDOWS)) {
+                return ZIP;
+            }
+            else if (osClassifier.equals(OS_CLASSIFIER_MAC)) {
+                return TBZ2;
+            }
+            else {
+                throw failWith(osClassifier + " is not supported");
+            }
+        }
+    }
+
     private String getOSClassifier() throws MojoFailureException {
 
         String fullName = System.getProperty("os.name");
         String osName = fullName.toLowerCase();
 
         if (osName.indexOf("win") > -1)
-            return "windows";
+            return OS_CLASSIFIER_WINDOWS;
         else if (osName.indexOf("mac") > -1)
-            return "mac";
+            return OS_CLASSIFIER_MAC;
         else {
             throw failWith(fullName + " is not supported");
         }

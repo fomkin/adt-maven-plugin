@@ -87,10 +87,16 @@
             <artifactId>maven-core</artifactId>
             <version>3.0.3</version>
         </dependency>
+        <!-- Plexus -->
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
             <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.1.2</version>
         </dependency>
         <!-- Test scope -->
         <dependency>

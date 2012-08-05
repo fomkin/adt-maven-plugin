@@ -55,4 +55,28 @@ public class DependencyAdtMojoTest {
         }
     }
 
+    @Test
+    public void getSDKArtifactPackagingTest() throws Exception {
+
+        DependencyAdtMojo adtMojo = new DependencyAdtMojo();
+
+        String p = adtMojo.getSDKArtifactPackaging("3.1", DependencyAdtMojo.OS_CLASSIFIER_WINDOWS);
+        Assert.assertEquals(p, DependencyAdtMojo.ZIP);
+
+        p = adtMojo.getSDKArtifactPackaging("3.1", DependencyAdtMojo.OS_CLASSIFIER_MAC);
+        Assert.assertEquals(p, DependencyAdtMojo.ZIP);
+
+        p = adtMojo.getSDKArtifactPackaging("3.2-RC1", DependencyAdtMojo.OS_CLASSIFIER_MAC);
+        Assert.assertEquals(p, DependencyAdtMojo.ZIP);
+
+        p = adtMojo.getSDKArtifactPackaging("3.4", DependencyAdtMojo.OS_CLASSIFIER_WINDOWS);
+        Assert.assertEquals(p, DependencyAdtMojo.ZIP);
+
+        p = adtMojo.getSDKArtifactPackaging("3.4", DependencyAdtMojo.OS_CLASSIFIER_MAC);
+        Assert.assertEquals(p, DependencyAdtMojo.TBZ2);
+
+        p = adtMojo.getSDKArtifactPackaging("3.4-beta-1", DependencyAdtMojo.OS_CLASSIFIER_MAC);
+        Assert.assertEquals(p, DependencyAdtMojo.TBZ2);
+    }
+
 }

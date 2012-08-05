@@ -45,9 +45,8 @@ public class PackageAdtMojo extends UnpackAdtMojo {
      * ipa-test,
      * ipa-debug-interpreter,
      * ipa-test-interpreter
-     * Native desktop
-     * EXE
-     * DMG
+     * Native desktop:
+     * native
      * For more information visit Adobe website
      * http://help.adobe.com/en_US/air/build/WS901d38e593cd1bac1e63e3d128cdca935b-8000.html
      *
@@ -154,7 +153,10 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         args.add("-jar");
         args.add(adtFile.getAbsolutePath());
         args.addAll(getPackageArguments());
-        args.addAll(getCertificateArguments());
+
+        if (!isNativeTarget())
+            args.addAll(getCertificateArguments());
+
         args.addAll(getMainArgs(finalAppDescriptor));
         args.addAll(getIncludesArgs());
 
@@ -256,6 +258,9 @@ public class PackageAdtMojo extends UnpackAdtMojo {
 
             args.add("-package");
 
+            if (isNativeTarget())
+                args.addAll(getCertificateArguments());
+
             if (!isAirTarget()) {
                 args.add("-target");
                 args.add(target);
@@ -300,7 +305,8 @@ public class PackageAdtMojo extends UnpackAdtMojo {
      * @param finalAppDescriptorFile mutated application descriptor
      * @return list of args
      */
-    public List<String> getMainArgs(File finalAppDescriptorFile) {
+    public List<String> getMainArgs(File finalAppDescriptorFile) throws MojoFailureException
+    {
 
         List<String> args = new ArrayList<String>();
         String ext = null;
@@ -311,6 +317,8 @@ public class PackageAdtMojo extends UnpackAdtMojo {
             ext = "apk";
         } else if (isUnsignedAirTarget()) {
             ext = "airi";
+        } else if (isNativeTarget()) {
+            ext = getNativeDesktopFileExt();
         } else {
             ext = "air";
         }
@@ -403,6 +411,10 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         return isiOSTarget();
     }
 
+    private boolean isNativeTarget() {
+        return target.equals("native");
+    }
+
     private boolean isUnsignedAirTarget() {
         return target.indexOf("airi") > -1;
     }
@@ -419,4 +431,17 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         return target.indexOf("apk") > -1;
     }
 
+    private String getNativeDesktopFileExt() throws MojoFailureException
+    {
+        String fullName = System.getProperty("os.name");
+        String osName = fullName.toLowerCase();
+
+        if (osName.indexOf("win") > -1)
+            return "exe";
+        else if (osName.indexOf("mac") > -1)
+            return "dmg";
+        else {
+            throw failWith(fullName + " is not supported");
+        }
+    }
 }
