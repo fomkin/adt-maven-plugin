@@ -1,6 +1,11 @@
 adt-maven-plugin changelog
 ===================
 
+Version 1.0.3 (5.08.2012)
+------------------------
+
+- Native desktop targets support.
+
 Version 1.0.2 (5.04.2012)
 ------------------------
 

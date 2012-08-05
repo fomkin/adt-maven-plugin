@@ -12,6 +12,7 @@ Current status (1.0.2)
 ----------------------
 
 * Building AIR, APK, IPA packages
+* Native desktop packages (DMG on mac osx, EXE on windows)
 * Adobe Native Extensions (ANE) support
 * Simple configuration
 * No need installing SDK. Plugin downloads it as dependency 
@@ -19,12 +20,15 @@ Current status (1.0.2)
 Plans
 --------------------------------------------
 
-* Building native desktop packages (exe, dmg)
 * Install to device mojo
 * Linux SDK artifact working over wine (just for fun :)
 
 Quick start
 -----------------------------------------------
+
+First, make sure that your project has `swf` packaging.
+
+    <packaging>swf</packaging>
 
 Add repository with plugin and SDK artifacts into your POM
 
@@ -52,7 +56,7 @@ Add `adt-maven-plugin` into plugins section
     
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         
         <executions>
           <execution>
@@ -64,7 +68,8 @@ Add `adt-maven-plugin` into plugins section
         
         <configuration>
         
-            <sdkVersion>3.2-RC1</sdkVersion>
+            <sdkVersion>3.3</sdkVersion>
+            
             <target>ipa-debug</target>
             <keystore>certificate.p12</keystore>
             <storepass>******</storepass>
@@ -111,12 +116,12 @@ If you want to use your own SDK package, place it into plugin dependencies. Be a
     <plugin>
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.3</version>
         <dependencies>
             <dependency>
                 <groupId>com.adobe.air</groupId>
                 <artifactId>air-sdk</artifactId>
-                <version>3.1</version>
+                <version>3.4-beta-1</version>
                 <type>zip</type>
                 <classifier>${os.family}</classifier>
             </dependency>
@@ -143,5 +148,3 @@ Foreign resources:
 * [Apache Maven](http://maven.apache.org)
 * [Flexmojos](http://flexmojos.sonatype.org/)
 * [Building Adobe AIR Applications](http://help.adobe.com/en_US/air/build/air_buildingapps.pdf)
-
-[1]: http://www.sparrow-framework.org

@@ -122,9 +122,9 @@
     </distributionManagement>
 
     <scm>
-        <url>https://github.com/yelbota/adt-maven-plugin</url>
-        <developerConnection>scm:git:github.com/yelbota/adt-maven-plugin.git</developerConnection>
-        <connection>scm:git:github.com/yelbota/adt-maven-plugin.git</connection>
+        <connection>scm:git:git@github.com:yelbota/adt-maven-plugin.git</connection>
+        <url>scm:git:git@github.com:yelbota/adt-maven-plugin.git</url>
+        <developerConnection>scm:git:git@github.com:yelbota/adt-maven-plugin.git</developerConnection>
     </scm>
 
 </project>
