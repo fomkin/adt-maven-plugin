@@ -8,7 +8,7 @@ General purpose
 
 Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
-Current status (1.0.2)
+Current status (1.0.3)
 ----------------------
 
 * Building AIR, APK, IPA packages
