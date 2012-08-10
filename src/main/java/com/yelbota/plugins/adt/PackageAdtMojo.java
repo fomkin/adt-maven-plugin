@@ -4,6 +4,7 @@ import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import com.yelbota.plugins.adt.model.AneModel;
 import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
 import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
+import com.yelbota.plugins.adt.utils.CleanStream;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -166,24 +167,27 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         try {
 
             String[] argsArray = args.toArray(new String[]{});
+            getLog().info("Building package " + getFinalName());
             getLog().debug(args.toString());
             Process process = Runtime.getRuntime().exec(argsArray);
+
+            CleanStream cleanError = new CleanStream(process.getErrorStream(),
+                    getLog(), CleanStream.CleanStreamType.ERROR);
+
+            CleanStream cleanOutput = new CleanStream(process.getInputStream(),
+                    getLog(), CleanStream.CleanStreamType.INFO);
+
+            cleanError.start();
+            cleanOutput.start();
+
             int code = process.waitFor();
 
             if (code > 0) {
 
-                String adtOutput = "";
-                String line = null;
-                BufferedReader b = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                while ((line = b.readLine()) != null)
-                    adtOutput += line + "\n";
-
                 // Oops.
                 throw failWith(
                         "Adt can't build the package. Error code #" + code +
-                                ". Checkout official documentation here http://help.adobe.com/en_US/air/build/air_buildingapps.pdf",
-                        adtOutput
+                                ". Checkout official documentation here http://help.adobe.com/en_US/air/build/air_buildingapps.pdf"
                 );
             }
 
@@ -309,7 +313,17 @@ public class PackageAdtMojo extends UnpackAdtMojo {
     {
 
         List<String> args = new ArrayList<String>();
-        String ext = null;
+        File outputFile = new File(outputDirectory, getFinalName());
+
+        args.add(outputFile.getAbsolutePath());
+        args.add(finalAppDescriptorFile.getAbsolutePath());
+
+        return args;
+    }
+
+    private String getFinalName() throws MojoFailureException
+    {
+        String ext;
 
         if (isiOSTarget()) {
             ext = "ipa";
@@ -323,12 +337,7 @@ public class PackageAdtMojo extends UnpackAdtMojo {
             ext = "air";
         }
 
-        File outputFile = new File(outputDirectory, fileNamePattern + "." + ext);
-
-        args.add(outputFile.getAbsolutePath());
-        args.add(finalAppDescriptorFile.getAbsolutePath());
-
-        return args;
+        return fileNamePattern + "." + ext;
     }
 
     public List<String> getIncludesArgs() throws MojoFailureException {
