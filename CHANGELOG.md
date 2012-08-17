@@ -1,10 +1,17 @@
 adt-maven-plugin changelog
 ===================
 
+Version 1.0.4 (17.08.2012)
+------------------------
+
+- Command mojo
+- Bug fixes
+
 Version 1.0.3 (5.08.2012)
 ------------------------
 
 - Native desktop targets support.
+- tbz2 sdk artifact support
 
 Version 1.0.2 (5.04.2012)
 ------------------------

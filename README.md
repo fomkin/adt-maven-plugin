@@ -8,12 +8,13 @@ General purpose
 
 Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
-Current status (1.0.3)
+Current status (1.0.4)
 ----------------------
 
 * Building AIR, APK, IPA packages
-* Native desktop packages (DMG on mac osx, EXE on windows)
+* Native desktop packages (DMG on Mac OSX, EXE on Windows)
 * Adobe Native Extensions (ANE) support
+* Run custom adt command
 * Simple configuration
 * No need installing SDK. Plugin downloads it as dependency 
  
@@ -56,7 +57,7 @@ Add `adt-maven-plugin` into plugins section
     
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         
         <executions>
           <execution>
@@ -104,6 +105,12 @@ Add `adt-maven-plugin` into plugins section
                 <include>icons</include>
             </includes>
             
+            <!-- 
+                 Optional. Plugin home directory. For example "${user.home}/.adt" allows to keep SDK always unpacked for many projects.
+                 ${project.build.directory} by default.
+             -->
+            <pluginHome></pluginHome>
+            
         </configuration>
     </plugin>
 
@@ -116,7 +123,7 @@ If you want to use your own SDK package, place it into plugin dependencies. Be a
     <plugin>
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <dependencies>
             <dependency>
                 <groupId>com.adobe.air</groupId>
@@ -142,6 +149,30 @@ ANE support designed in true maven style. Just deploy your extension to maven re
     </dependency>
 
 Note that Flexmojos doesn't support ANE dependencies at this moment (30.03.2012), so you can deploy your ANE with `ane` and `swc` packagings, and add they to dependencies both. Another way: use my experimental Flexmojos fork version `4.3-beta-y1` (available in my repo). 
+
+Run custom command
+-----------------------------------------------
+
+You can run custom ADT command using `command` goal. 
+
+    <plugin>
+        <groupId>com.yelbota.plugins</groupId>
+        <artifactId>adt-maven-plugin</artifactId>
+        <version>1.0.4</version>
+        <configuration>
+            <sdkVersion>3.3</sdkVersion>
+        </configuration>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>command</goal>
+                </goals>
+                <configuration>
+                    <arguments>-certificate -cn cert 1024-RSA ${project.build.directory}/cert.p12 111</arguments>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
 
 Foreign resources:
 
