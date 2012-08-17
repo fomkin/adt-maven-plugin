@@ -10,10 +10,6 @@ import org.codehaus.plexus.logging.console.ConsoleLoggerManager;
 import java.io.File;
 import java.io.IOException;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 
 /**
  * @goal unpack
@@ -23,17 +19,34 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
 
     protected static ConsoleLoggerManager plexusLoggerManager = new ConsoleLoggerManager();
 
+    /**
+     * adt-maven-plugin home directory.
+     * For example "${user.home}/.adt" allows to keep SDK always unpaked.
+     *
+     * @parameter expression="${project.build.directory}"
+     */
+    public File pluginHome;
+
     protected File sdkDirectory;
+
+    // ${user.home}
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        if (!pluginHome.exists()) {
+            if (!pluginHome.mkdirs()) {
+                failWith("Can't create adt-maven-plugin home directory: " + pluginHome.getAbsolutePath());
+            }
+        }
+
         Artifact artifact = getAirSdkArtifact();
         File artifactFile = artifact.getFile();
-        File unpackDir = new File(outputDirectory, "air_sdk_" + sdkVersion);
+        File unpackDir = new File(pluginHome, artifact.getArtifactId() + "-" + artifact.getVersion());
+        getLog().debug("unpackDir = " + unpackDir.getAbsolutePath());
 
-        unpackTo(unpackDir, artifactFile, artifact.getType());
         sdkDirectory = unpackDir;
+        unpackTo(unpackDir, artifactFile, artifact.getType());
     }
 
     /**
@@ -45,9 +58,15 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
      */
     public void unpackTo(File unpackDir, File artifactFile, String type) throws MojoFailureException {
 
-        if (unpackDir.exists() && unpackDir.isDirectory()) {
+        if (unpackDir.exists()) {
 
-            getLog().debug("AIR SDK already unpacked");
+            if (unpackDir.isDirectory()) {
+
+                getLog().debug("AIR SDK already unpacked");
+            }
+            else {
+                failWith(unpackDir.getAbsolutePath() + ", which must be directory for unpacking, now is file");
+            }
 
         } else {
 

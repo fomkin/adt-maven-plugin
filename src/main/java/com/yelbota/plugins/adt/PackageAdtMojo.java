@@ -10,6 +10,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +24,7 @@ import java.util.List;
  * @phase package
  * @threadSafe
  */
-public class PackageAdtMojo extends UnpackAdtMojo {
+public class PackageAdtMojo extends CommandAdtMojo {
 
     /**
      * @parameter default-value="${project}
@@ -139,20 +140,16 @@ public class PackageAdtMojo extends UnpackAdtMojo {
     public String versionNumber;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-
-        super.execute();
+    protected void prepareArguments() throws MojoFailureException
+    {
+        super.prepareArguments();
 
         validateConfiguration();
 
-        File adtFile = FileUtils.resolveFile(sdkDirectory, "lib/adt.jar");
         File aneDir = prepareAneDir();
         File finalAppDescriptor = getFinalApplicationDescriptor(getExtensionsIds(aneDir));
         List<String> args = new ArrayList<String>();
 
-        args.add("java");
-        args.add("-jar");
-        args.add(adtFile.getAbsolutePath());
         args.addAll(getPackageArguments());
 
         if (!isNativeTarget())
@@ -164,39 +161,10 @@ public class PackageAdtMojo extends UnpackAdtMojo {
         if (aneDir.list().length > 0)
             args.addAll(getExtDirArguments(aneDir));
 
-        try {
+        String[] argsArray = args.toArray(new String[]{});
+        getLog().info("Building package " + getFinalName());
 
-            String[] argsArray = args.toArray(new String[]{});
-            getLog().info("Building package " + getFinalName());
-            getLog().debug(args.toString());
-            Process process = Runtime.getRuntime().exec(argsArray);
-
-            CleanStream cleanError = new CleanStream(process.getErrorStream(),
-                    getLog(), CleanStream.CleanStreamType.ERROR);
-
-            CleanStream cleanOutput = new CleanStream(process.getInputStream(),
-                    getLog(), CleanStream.CleanStreamType.INFO);
-
-            cleanError.start();
-            cleanOutput.start();
-
-            int code = process.waitFor();
-
-            if (code > 0) {
-
-                // Oops.
-                throw failWith(
-                        "Adt can't build the package. Error code #" + code +
-                                ". Checkout official documentation here http://help.adobe.com/en_US/air/build/air_buildingapps.pdf"
-                );
-            }
-
-        } catch (IOException e) {
-
-            throw failWith("Cant execute adt", e.getLocalizedMessage());
-        } catch (InterruptedException e) {
-            throw failWith("ADT fails " + e);
-        }
+        arguments = StringUtils.join(argsArray, " ");
     }
 
     private List<String> getExtensionsIds(File aneDir) throws MojoFailureException {
