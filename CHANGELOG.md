@@ -1,6 +1,11 @@
 adt-maven-plugin changelog
 ===================
 
+Version 1.0.5 (20.08.2012)
+------------------------
+
+- License info added
+
 Version 1.0.4 (17.08.2012)
 ------------------------
 
