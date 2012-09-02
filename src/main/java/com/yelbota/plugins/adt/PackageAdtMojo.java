@@ -18,19 +18,14 @@ package com.yelbota.plugins.adt;
 import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import com.yelbota.plugins.adt.model.AneModel;
 import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
-import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
-import com.yelbota.plugins.adt.utils.CleanStream;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
