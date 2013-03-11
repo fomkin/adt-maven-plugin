@@ -86,9 +86,7 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
 
     public String getSDKArtifactPackaging(String version, String classifier) {
 
-        String preparedVersionString = version.replaceAll("[^\\d.]", "");
-
-        if (Float.valueOf(preparedVersionString) < 3.4) {
+        if (getVersionNumber(version) < 3.4) {
             return ZIP;
         }
         else {
@@ -102,5 +100,11 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
         }
 
         return null;
+    }
+
+    protected Float getVersionNumber(String version) {
+        String preparedVersionString = version.replaceAll("[^\\d.]", "");
+
+        return Float.valueOf(preparedVersionString);
     }
 }
