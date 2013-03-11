@@ -149,6 +149,15 @@ public class PackageAdtMojo extends CommandAdtMojo {
      */
     public String versionNumber;
 
+    /**
+    * A boolean value
+    *
+    * If true, the "-sampler" option is added to the "adt -package" command
+    *
+    * @parameter default-value=false
+    */
+    public boolean sampler;
+
     @Override
     protected void prepareArguments() throws MojoFailureException
     {
@@ -175,6 +184,10 @@ public class PackageAdtMojo extends CommandAdtMojo {
         getLog().info("Building package " + getFinalName());
 
         arguments = StringUtils.join(argsArray, " ");
+    }
+
+    public void checkForSampler() {
+
     }
 
     private List<String> getExtensionsIds(File aneDir) throws MojoFailureException {
@@ -247,6 +260,10 @@ public class PackageAdtMojo extends CommandAdtMojo {
                 args.add("-target");
                 args.add(target);
             }
+        }
+
+        if(sampler && getVersionNumber(sdkVersion) >= 3.4) {
+            args.add("-sampler");
         }
 
         return args;

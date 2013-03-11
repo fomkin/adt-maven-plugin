@@ -157,6 +157,29 @@ public class PackageAdtMojoTest {
         }
     }
 
+    @Test
+    public void testSamplerArgument() {
+
+        PackageAdtMojo mojo = new PackageAdtMojo();
+        mojo.target = "airi";
+
+        mojo.sdkVersion = "3.6";
+        mojo.sampler = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-sampler"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-sampler"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = false;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+
+        mojo.sdkVersion = "3.3";
+        mojo.sampler = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+    }
+
     // TODO test target null
     // TODO test includes null
 
