@@ -186,10 +186,6 @@ public class PackageAdtMojo extends CommandAdtMojo {
         arguments = StringUtils.join(argsArray, " ");
     }
 
-    public void checkForSampler() {
-
-    }
-
     private List<String> getExtensionsIds(File aneDir) throws MojoFailureException {
 
         List<String> result = new ArrayList<String>();
