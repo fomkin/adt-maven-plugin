@@ -30,7 +30,8 @@
                 <artifactId>adt-maven-plugin</artifactId>
                 <version>@pom.version@</version>
                 <configuration>
-                    <sdkVersion>3.2-RC1</sdkVersion>
+                    <sdkVersion>3.5</sdkVersion>
+                    <pluginHome>../ph</pluginHome>
                 </configuration>
             </plugin>
         </plugins>

@@ -81,7 +81,9 @@
                     <debug>true</debug>
                     <projectsDirectory>src/it</projectsDirectory>
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+<!--
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+-->
                     <goals>
                         <goal>clean</goal>
                         <goal>package</goal>

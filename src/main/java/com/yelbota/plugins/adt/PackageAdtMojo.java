@@ -43,22 +43,28 @@ public class PackageAdtMojo extends CommandAdtMojo {
 
     /**
      * ADT package target. available:
-     * Desktop AIR runtime:
-     * air,
-     * airi
-     * Android:
-     * apk,
-     * apk-debug,
-     * apk-captive-runtime
-     * IOS:
-     * ipa-ad-hoc,
-     * ipa-app-store,
-     * ipa-debug,
-     * ipa-test,
-     * ipa-debug-interpreter,
-     * ipa-test-interpreter
-     * Native desktop:
-     * native
+     *
+     *   Desktop AIR runtime:
+     *     air,
+     *     airi
+     *
+     *   Android:
+     *     apk,
+     *     apk-debug,
+     *     apk-captive-runtime
+     *
+     *   IOS:
+     *     ipa-ad-hoc,
+     *     ipa-app-store,
+     *     ipa-debug,
+     *     ipa-test,
+     *     ipa-debug-interpreter,
+     *     ipa-test-interpreter
+     *
+     *   Native desktop:
+     *     native
+     *     bundle
+     *
      * For more information visit Adobe website
      * http://help.adobe.com/en_US/air/build/WS901d38e593cd1bac1e63e3d128cdca935b-8000.html
      *
@@ -323,7 +329,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
         } else if (isUnsignedAirTarget()) {
             ext = "airi";
         } else if (isNativeTarget()) {
-            ext = getNativeDesktopFileExt();
+            ext = getNativeDesktopFileExt(isBundleTarget());
         } else {
             ext = "air";
         }
@@ -412,7 +418,11 @@ public class PackageAdtMojo extends CommandAdtMojo {
     }
 
     private boolean isNativeTarget() {
-        return target.equals("native");
+        return target.equals("native") || target.equals("bundle");
+    }
+
+    private boolean isBundleTarget() {
+        return target.equals("bundle");
     }
 
     private boolean isUnsignedAirTarget() {
@@ -431,7 +441,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
         return target.indexOf("apk") > -1;
     }
 
-    private String getNativeDesktopFileExt() throws MojoFailureException
+    private String getNativeDesktopFileExt(Boolean bundle) throws MojoFailureException
     {
         String fullName = System.getProperty("os.name");
         String osName = fullName.toLowerCase();
@@ -439,7 +449,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
         if (osName.indexOf("win") > -1)
             return "exe";
         else if (osName.indexOf("mac") > -1)
-            return "dmg";
+            return bundle ? "app" : "dmg";
         else {
             throw failWith(fullName + " is not supported");
         }

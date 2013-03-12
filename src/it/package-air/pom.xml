@@ -37,10 +37,11 @@
                 <artifactId>adt-maven-plugin</artifactId>
                 <version>@pom.version@</version>
                 <configuration>
-                    <sdkVersion>3.2-RC1</sdkVersion>
+                    <sdkVersion>3.5</sdkVersion>
                     <target>air</target>
                     <keystore>certificate.p12</keystore>
                     <storepass>111</storepass>
+                    <pluginHome>../ph</pluginHome>
                 </configuration>
             </plugin>
         </plugins>

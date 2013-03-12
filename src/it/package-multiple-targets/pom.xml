@@ -50,9 +50,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <sdkVersion>3.2-RC1</sdkVersion>
+                    <sdkVersion>3.5</sdkVersion>
                     <keystore>certificate.p12</keystore>
                     <storepass>111</storepass>
+                    <pluginHome>../ph</pluginHome>
                 </configuration>
             </plugin>
         </plugins>

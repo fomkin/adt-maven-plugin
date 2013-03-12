@@ -33,11 +33,14 @@
                     <dependency>
                         <groupId>com.adobe.air</groupId>
                         <artifactId>air-sdk</artifactId>
-                        <version>3.2-RC1</version>
-                        <type>zip</type>
+                        <version>3.5</version>
+                        <type>tbz2</type>
                         <classifier>${os.family}</classifier>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <pluginHome>../ph</pluginHome>
+                </configuration>
             </plugin>
         </plugins>
     </build>

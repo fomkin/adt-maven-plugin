@@ -7,7 +7,6 @@
 
     <groupId>com.yelbota.plugins.adt-maven-plugin.it</groupId>
     <artifactId>command</artifactId>
-    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <build>
@@ -18,14 +17,16 @@
                         <goals>
                             <goal>command</goal>
                         </goals>
+			<phase>compile</phase>
                     </execution>
                 </executions>
                 <groupId>com.yelbota.plugins</groupId>
                 <artifactId>adt-maven-plugin</artifactId>
                 <version>@pom.version@</version>
                 <configuration>
-                    <sdkVersion>3.3</sdkVersion>
-                    <arguments>-certificate -cn cert 1024-RSA ${project.build.directory}/cert.p12 111</arguments>
+                    <sdkVersion>3.5</sdkVersion>
+                    <pluginHome>../ph</pluginHome>
+                    <arguments>-certificate -cn cert 1024-RSA cert.p12 111</arguments>
                 </configuration>
             </plugin>
         </plugins>
