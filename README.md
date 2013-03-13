@@ -8,7 +8,7 @@ General purpose
 
 Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
 
-Current status (1.0.5)
+Current status (1.0.7)
 ----------------------
 
 * Building AIR, APK, IPA packages
@@ -57,7 +57,7 @@ Add `adt-maven-plugin` into plugins section
     
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.7</version>
         
         <executions>
           <execution>
@@ -69,7 +69,7 @@ Add `adt-maven-plugin` into plugins section
         
         <configuration>
         
-            <sdkVersion>3.3</sdkVersion>
+            <sdkVersion>3.5</sdkVersion>
             
             <target>ipa-debug</target>
             <keystore>certificate.p12</keystore>
@@ -110,7 +110,15 @@ Add `adt-maven-plugin` into plugins section
                  ${project.build.directory} by default.
              -->
             <pluginHome></pluginHome>
-            
+
+            <!-- (iOS only, AIR 3.4 and higher) Enables the telemetry-based ActionScript sampler in iOS 
+                 applications. Using this flag lets you profile the application with Adobe Scout. Although
+                 Scout can profile any Flash platform content, enabling detailed telemetry gives you 
+                 deep insight into ActionScript function timing, DisplayList, Stage3D rendering and more.
+                 Note that using this flag will have a slight performance impact, so do not use it for
+                 production applications.
+            -->
+            <sampler>false</sampler>
         </configuration>
     </plugin>
 
@@ -123,12 +131,12 @@ If you want to use your own SDK package, place it into plugin dependencies. Be a
     <plugin>
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.7</version>
         <dependencies>
             <dependency>
                 <groupId>com.adobe.air</groupId>
                 <artifactId>air-sdk</artifactId>
-                <version>3.4-beta-1</version>
+                <version>3.5</version>
                 <type>zip</type>
                 <classifier>${os.family}</classifier>
             </dependency>
@@ -158,9 +166,9 @@ You can run custom ADT command using `command` goal.
     <plugin>
         <groupId>com.yelbota.plugins</groupId>
         <artifactId>adt-maven-plugin</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.7</version>
         <configuration>
-            <sdkVersion>3.3</sdkVersion>
+            <sdkVersion>3.5</sdkVersion>
         </configuration>
         <executions>
             <execution>
