@@ -18,6 +18,9 @@ package com.yelbota.plugins.adt;
 import com.yelbota.plugins.adt.utils.CleanStream;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -25,17 +28,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * @goal command
- * @phase package
- * @threadSafe
- */
+@Mojo(name="command", defaultPhase = LifecyclePhase.PACKAGE)
 public class CommandAdtMojo extends UnpackAdtMojo {
 
     /**
      * Custom adt arguments
-     * @parameter
      */
+    @Parameter
     protected String arguments;
 
     @Override

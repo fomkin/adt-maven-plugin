@@ -19,7 +19,12 @@ import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import com.yelbota.plugins.adt.model.AneModel;
 import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Build;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -29,17 +34,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @goal package
- * @phase package
- * @threadSafe
- */
+@Mojo(name="package", defaultPhase = LifecyclePhase.PACKAGE)
 public class PackageAdtMojo extends CommandAdtMojo {
-
-    /**
-     * @parameter default-value="${project}
-     */
-    public MavenProject project;
 
     /**
      * ADT package target. available:
@@ -67,102 +63,111 @@ public class PackageAdtMojo extends CommandAdtMojo {
      *
      * For more information visit Adobe website
      * http://help.adobe.com/en_US/air/build/WS901d38e593cd1bac1e63e3d128cdca935b-8000.html
-     *
-     * @parameter
      */
+    @Parameter
     public String target;
 
     /**
      * http://help.adobe.com/en_US/air/build/WS5b3ccc516d4fbf351e63e3d118666ade46-7f72.html
-     *
-     * @parameter default-value="pkcs12"
      */
+    @Parameter(defaultValue = "pkcs12")
     public String storetype;
 
     /**
      * Certificate file
-     *
-     * @parameter expression="${build.adt.keystore}"
      */
+    @Parameter(property = "build.adt.keystore")
     public File keystore;
 
     /**
      * Password for certificate file.
-     *
-     * @parameter expression="${build.adt.storepass}"
      */
+    @Parameter(property = "build.adt.storepass")
     public String storepass;
 
     /**
      * Required for iOS packages (ipa*).
      * Example: /Users/yelbota/myapp.mobileprovision
-     *
-     * @parameter expression="${build.adt.mobileprovision}"
      */
+    @Parameter(property = "build.adt.mobileprovision")
     public File provisioningProfile;
 
     /**
      * Output filename without extension.
-     *
-     * @parameter expression="${project.artifactId}-${project.version}"
      */
+    @Parameter
     public String fileNamePattern;
 
     /**
      * AIR Application descriptor. For example src/main/flex/MyProject-app.xml
-     *
-     * @parameter default-value="src/main/resources/application-descriptor.xml"
      */
+    @Parameter(defaultValue = "src/main/resources/application-descriptor.xml")
     public File descriptor;
 
     /**
      * File to include in application descriptor
-     *
-     * @required
-     * @parameter expression="${project.build.directory}/${project.build.finalName}.${project.packaging}"
      */
+    @Parameter
     public File applicationContent;
 
     /**
      * Root directory for includes.
-     *
-     * @parameter expression="${project.build.directory}/classes"
      */
+    @Parameter
     public File includesRoot;
 
     /**
      * List of files and directories to include into the package
      * relative to includesRoot directory
-     *
-     * @parameter
      */
+    @Parameter
     public List<String> includes;
 
     /**
      * A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should
      * be shown to users.
-     *
-     * @parameter expression="${project.version}"
      */
+    @Parameter(defaultValue = "project.version")
     public String versionLabel;
 
     /**
      * A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used
      * to check for application upgrade.Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
      * An updated version of application must have a versionNumber value higher than the previous version.
-     *
-     * @parameter default-value="0.0.0"
      */
+    @Parameter(defaultValue = "0.0.0")
     public String versionNumber;
 
     /**
     * A boolean value
     *
     * If true, the "-sampler" option is added to the "adt -package" command
-    *
-    * @parameter default-value=false
     */
+    @Parameter(defaultValue = "false")
     public boolean sampler;
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        Build build = project.getBuild();
+
+        if (fileNamePattern == null) {
+            fileNamePattern = project.getArtifactId() + "-" + project.getVersion();
+        }
+
+        if (applicationContent == null) {
+            applicationContent = new File(
+                    build.getDirectory(),
+                    build.getFinalName() + "." + project.getPackaging()
+            );
+        }
+
+        if (includesRoot == null) {
+            includesRoot = new File(build.getDirectory(), "classes");
+        }
+
+        super.execute();
+    }
 
     @Override
     protected void prepareArguments() throws MojoFailureException

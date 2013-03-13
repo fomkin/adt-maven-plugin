@@ -53,12 +53,14 @@
             </plugin>
             <plugin>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.9</version>
+                <version>3.2</version>
                 <configuration>
                     <goalPrefix>adt</goalPrefix>
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>mojo-descriptor</id>
                         <goals>
                             <goal>addPluginArtifactMetadata</goal>
                             <goal>descriptor</goal>
@@ -110,6 +112,17 @@
             <groupId>com.yelbota.plugins</groupId>
             <artifactId>native-dependency-maven-plugin-base</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <!-- Test scope -->
         <dependency>

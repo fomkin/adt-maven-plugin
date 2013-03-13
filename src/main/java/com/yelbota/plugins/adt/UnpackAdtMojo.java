@@ -20,25 +20,22 @@ import com.yelbota.plugins.nd.utils.DefaultUnpackMethods;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLoggerManager;
 
 import java.io.File;
 
-
-/**
- * @goal unpack
- * @threadSafe
- */
+@Mojo(name = "unpack")
 public class UnpackAdtMojo extends DependencyAdtMojo {
 
     /**
      * adt-maven-plugin home directory.
      * For example "${user.home}/.adt" allows to keep SDK always unpaked.
-     *
-     * @parameter expression="${project.build.directory}"
      */
-    public File pluginHome;
+    @Parameter(property = "project.build.directory")
+    protected File pluginHome;
 
     protected File sdkDirectory;
 

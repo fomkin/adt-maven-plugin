@@ -19,17 +19,18 @@ import com.yelbota.plugins.nd.DependencyHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-/**
- * @goal dependency
- * @threadSafe
- */
+@Mojo(name = "dependency")
 public class DependencyAdtMojo extends AbstractAdtMojo {
 
     /**
      * AIR SDK version.
-     * @parameter
      */
+    @Parameter
     protected String sdkVersion;
 
     public static final String ZIP = "zip";

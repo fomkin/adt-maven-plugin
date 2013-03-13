@@ -19,6 +19,9 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
 
 import java.io.File;
@@ -26,39 +29,25 @@ import java.util.List;
 
 abstract public class AbstractAdtMojo extends AbstractMojo {
 
-    /**
-     * @component
-     * @readonly
-     */
+    @Component
+    protected MavenProject project;
+
+    @Component
     protected RepositorySystem repositorySystem;
 
-    /**
-     * @parameter expression="${plugin.artifacts}"
-     * @readonly
-     * @required
-     */
-    public List<Artifact> pluginArtifacts;
+    @Parameter(property = "plugin.artifacts", readonly = true)
+    protected List<Artifact> pluginArtifacts;
 
-    /**
-     * @parameter expression="${localRepository}"
-     * @required
-     * @readonly
-     */
-
+    @Parameter(property = "localRepository", readonly = true)
     protected ArtifactRepository localRepository;
-    /**
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     * @required
-     * @readonly
-     */
+
+    @Parameter(property = "project.remoteArtifactRepositories", readonly = true)
     protected List<ArtifactRepository> remoteRepositories;
 
     /**
      * Location of the file.
-     *
-     * @parameter expression="${project.build.directory}"
-     * @required
      */
+    @Parameter(property = "project.build.directory", required = true)
     protected File outputDirectory;
 
     protected MojoFailureException failWith(String msg) {
@@ -68,5 +57,4 @@ abstract public class AbstractAdtMojo extends AbstractMojo {
     protected MojoFailureException failWith(String msg, String fullMsg) {
         return new MojoFailureException(this, msg, fullMsg);
     }
-
 }
