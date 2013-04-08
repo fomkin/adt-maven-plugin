@@ -25,7 +25,9 @@ import org.codehaus.plexus.util.FileUtils;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PackageAdtMojoTest {
@@ -93,14 +95,16 @@ public class PackageAdtMojoTest {
 
         File dir = mojo.prepareAneDir();
 
-        String[] dirList = dir.list();
+        List<String> dirList = Arrays.asList(dir.list());
         String[] pattern = new String[]{"myExt1-1.0.ane", "myExt2-1.1.ane"};
 
         Assert.assertTrue(dir.exists());
-        Assert.assertEquals(dirList.length, pattern.length);
 
+        // Check that count of files in directory equals length of pattern array
+        // and all of the pattern elements exists in directory listing.
+        Assert.assertEquals(dirList.size(), pattern.length);
         for (int i = 0; i < pattern.length; i++) {
-            Assert.assertEquals(dirList[i], pattern[i]);
+            dirList.contains(pattern[i]);
         }
     }
 
