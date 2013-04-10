@@ -6,7 +6,7 @@ Build Adobe AIR applications with your Maven!
 General purpose
 ---------------
 
-Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices.
+Some time ago, Adobe released AIR for mobile devices. There was a question: how to package AIR-application automatically? Flexmojos allows you to build only \*.air packages, so I have created the plugin which could work with platform dependent AIR SDK and additionally build packages for mobile devices. ***This plugin is not replacement of Flexmojos***. You still need Flexmojos to build SWF.
 
 Current status (1.0.7)
 ----------------------
@@ -156,7 +156,7 @@ ANE support designed in true maven style. Just deploy your extension to maven re
         <type>ane</type>
     </dependency>
 
-Note that Flexmojos doesn't support ANE dependencies at this moment (30.03.2012), so you can deploy your ANE with `ane` and `swc` packagings, and add they to dependencies both. Another way: use my experimental Flexmojos fork version `4.3-beta-y1` (available in my repo). 
+Note that Flexmojos 4.x doesn't support ANE dependencies, so you need to use Flexmojos 6.x.
 
 Run custom command
 -----------------------------------------------
@@ -182,8 +182,14 @@ You can run custom ADT command using `command` goal.
         </executions>
     </plugin>
 
-Foreign resources:
+Examples
+-----------------------------------------------
+
+[https://github.com/yelbota/adt-maven-plugin/tree/master/src/it](https://github.com/yelbota/adt-maven-plugin/tree/master/src/it)
+
+Foreign resources
+-----------------------------------------------
 
 * [Apache Maven](http://maven.apache.org)
-* [Flexmojos](http://flexmojos.sonatype.org/)
+* [Flexmojos](http://flexmojos.net)
 * [Building Adobe AIR Applications](http://help.adobe.com/en_US/air/build/air_buildingapps.pdf)

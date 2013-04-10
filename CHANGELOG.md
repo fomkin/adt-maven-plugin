@@ -1,6 +1,12 @@
 adt-maven-plugin changelog
 ===================
 
+Version 1.0.7 (13.03.2013)
+------------------------
+
+- sampler argument
+- native desktop bundles (like captive runtime)
+
 Version 1.0.5 (20.08.2012)
 ------------------------
 
