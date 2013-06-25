@@ -162,9 +162,7 @@
         <developerConnection>scm:git:git@github.com:yelbota/adt-maven-plugin.git</developerConnection>
     </scm>
 
-    <url>https://flexmojos.atlassian.net/wiki/display/FLEXMOJOS/Home</url>
     <issueManagement>
-    	<url>https://flexmojos.atlassian.net/secure/Dashboard.jspa</url>
     	<system>jira</system>
     </issueManagement>
 </project>
