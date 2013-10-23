@@ -142,7 +142,7 @@
     <repositories>
         <repository>
             <id>yelbota-dropbox-repo</id>
-            <url>http://dl.dropbox.com/u/36020926/maven/</url>
+            <url>http://dl.dropboxusercontent.com/u/36020926/maven/</url>
             <snapshots><enabled>false</enabled></snapshots>
             <releases><enabled>true</enabled></releases>
         </repository>
