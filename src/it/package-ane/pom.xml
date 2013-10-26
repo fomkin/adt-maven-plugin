@@ -22,9 +22,9 @@
                 </executions>
                 <groupId>com.yelbota.plugins</groupId>
                 <artifactId>adt-maven-plugin</artifactId>
-                <version>1.0.8-SNAPSHOT</version>
+                <version>@pom.version@</version>
                 <configuration>
-                    <pluginHome>${user.home}/.adt</pluginHome>
+                    <pluginHome>../ph</pluginHome>
                     <extensionDescriptor>src/main/resources/extension.xml</extensionDescriptor>
                     <extensionSwc>src/main/resources/VolumeLib.swc</extensionSwc>
                     <sdkVersion>3.5</sdkVersion>
