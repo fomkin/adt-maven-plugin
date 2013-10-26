@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yelbota.plugins.adt-maven-plugin.it</groupId>
+    <artifactId>package-ane</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package-ane</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>com.yelbota.plugins</groupId>
+                <artifactId>adt-maven-plugin</artifactId>
+                <version>@pom.version@</version>
+                <configuration>
+                    <pluginHome>../ph</pluginHome>
+                    <extensionDescriptor>src/main/resources/extension.xml</extensionDescriptor>
+                    <extensionSwc>src/main/resources/VolumeLib.swc</extensionSwc>
+                    <sdkVersion>3.5</sdkVersion>
+                    <platforms>
+                        <platform>
+                            <name>default</name>
+                            <directory>src/main/resources/default</directory>
+                        </platform>
+                        <platform>
+                            <name>iPhone-ARM</name>
+                            <directory>src/main/resources/ios</directory>
+                            <options>src/main/resources/platformoptions.xml</options>
+                            <extractLibrarySwf>true</extractLibrarySwf>
+                        </platform>
+                        <platform>
+                            <name>Android-ARM</name>
+                            <directory>src/main/resources/android</directory>
+                            <extractLibrarySwf>true</extractLibrarySwf>                        
+                        </platform> 
+                    </platforms>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>yelbota-dropbox-repo</id>
+            <url>http://dl.dropboxusercontent.com/u/36020926/maven/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>yelbota-dropbox-repo</id>
+            <url>http://dl.dropboxusercontent.com/u/36020926/maven/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </pluginRepository>    
+    </pluginRepositories>
+
+</project>
