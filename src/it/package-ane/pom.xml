@@ -39,6 +39,7 @@
                         <platform>
                             <name>iPhone-ARM</name>
                             <directory>src/main/resources/ios</directory>
+                            <options>src/main/resources/platformoptions.xml</options>
                         </platform>
                         <platform>
                             <name>Android-ARM</name>

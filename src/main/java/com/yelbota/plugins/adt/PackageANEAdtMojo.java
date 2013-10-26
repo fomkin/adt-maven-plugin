@@ -78,7 +78,13 @@ public class PackageANEAdtMojo extends CommandAdtMojo {
 
         for (Platform platform : platforms) {
             args.add("-platform");
-            args.add(platform.name);            
+            args.add(platform.name);     
+
+            if(platform.options != null) {
+                args.add("-platformoptions");
+                args.add(platform.options.getAbsolutePath());
+            }
+
             args.add("-C");
             args.add(platform.directory.getAbsolutePath());
             if(platform.files != null && platform.files.size() > 0) {

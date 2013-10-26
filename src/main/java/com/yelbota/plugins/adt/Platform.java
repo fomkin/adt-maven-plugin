@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class Platform {
 	public String name;
 	public File directory;
+	public File options;
 	public ArrayList<String> files;
 	public Platform(){}
 	public Platform(String name, File directory){
