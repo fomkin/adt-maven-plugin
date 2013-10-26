@@ -25,10 +25,14 @@ public class Platform {
 	public String name;
 	public File directory;
 	public File options;
-	public ArrayList<String> files;
+	public Boolean extractLibrarySwf;
 	public Platform(){}
 	public Platform(String name, File directory){
 		this.name = name;
 		this.directory = directory;
+	}
+
+	public Boolean requiresSWFExtraction() {
+		return extractLibrarySwf != null && extractLibrarySwf;
 	}
 }

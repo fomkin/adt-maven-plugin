@@ -70,17 +70,14 @@ public class PackageANEAdtMojoTest {
 		File swc = FileUtils.resolveFile(testDir, "unit/stub.swc");
 		File platformOptions = FileUtils.resolveFile(testDir, "unit/platform-options.xml");
 		File platformFolder = FileUtils.resolveFile(new File(build.getDirectory()), "platform-folder/");
-		Platform platform1 = new Platform("default", platformFolder);
-		platform1.files = new ArrayList<String>();
-		platform1.files.add("file1");
-		platform1.files.add("file2");
-		Platform platform2 = new Platform("Android-ARM", platformFolder);
-		platform2.options = platformOptions;
+		Platform iphonePlatform = new Platform("iPhone-ARM", platformFolder);
+		iphonePlatform.options = platformOptions;
 		mojo.extensionDescriptor = descriptor;
 		mojo.extensionSwc = swc;
 		mojo.platforms = new ArrayList<Platform>();
-		mojo.platforms.add(platform1);
-		mojo.platforms.add(platform2);
+		mojo.platforms.add(new Platform("default", platformFolder));
+		mojo.platforms.add(new Platform("Android-ARM", platformFolder));
+		mojo.platforms.add(iphonePlatform);
 		mojo.prepareArguments();
 
 		File expectedTarget = new File(workDir, "artifact-version.ane");
@@ -91,11 +88,14 @@ public class PackageANEAdtMojoTest {
 			descriptor.getAbsolutePath(),
 			"-swc " + swc.getAbsolutePath(),
 			"-platform default -C " + platformFolder.getAbsolutePath(),
-			"file1 file2",
+			".", // platform with no files -> use "." to mean all folder content
 			"-platform Android-ARM",
+			"-C " + platformFolder.getAbsolutePath(),
+			".",
+			"-platform iPhone-ARM",
 			"-platformoptions " + platformOptions.getAbsolutePath(),
 			"-C " + platformFolder.getAbsolutePath(),
-			"." // platform with no files -> use "." to mean all folder content
+			"."
 		};
 
 		Assert.assertEquals(mojo.arguments, StringUtils.join(args, " ") );

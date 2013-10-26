@@ -28,6 +28,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,15 +88,34 @@ public class PackageANEAdtMojo extends CommandAdtMojo {
             }
 
             args.add("-C");
-            args.add(platform.directory.getAbsolutePath());
-            if(platform.files != null && platform.files.size() > 0) {
-                args.addAll(platform.files);    
+            args.add(platform.directory.getAbsolutePath());            
+            args.add(".");
+
+            if(platform.requiresSWFExtraction()) {                
+                try {
+                    extractLibrarySwf(extensionSwc, platform.directory);
+                }
+                catch (Exception e) {
+                    throw failWith("Unable to extract library", e.getMessage());
+                }                                                    
             }
-            else {
-                args.add(".");
-            }            
         }
 
     	arguments = StringUtils.join(args.toArray(new String[]{}), " ");
+    }
+
+    private void extractLibrarySwf(File swc, File destinationDir) throws Exception {
+        ZipFile zipFile = new ZipFile(extensionSwc.getAbsolutePath());
+        List headers = zipFile.getFileHeaders();
+        FileHeader header;
+        for(int i = 0; i < headers.size(); i++) {
+            header = (FileHeader) headers.get(i);            
+            if(header.getFileName().equals("library.swf")) {
+                getLog().debug("Writing library.swf in " + destinationDir.getAbsolutePath());
+                zipFile.extractFile(header, destinationDir.getAbsolutePath());
+                return;       
+            }
+        }
+        throw new Exception("Could not find library.swf in " + swc.getAbsolutePath());
     }
 }

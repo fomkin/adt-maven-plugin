@@ -32,18 +32,17 @@
                         <platform>
                             <name>default</name>
                             <directory>src/main/resources/default</directory>
-                            <files>
-                                <file>library.swf</file>
-                            </files>
                         </platform>
                         <platform>
                             <name>iPhone-ARM</name>
                             <directory>src/main/resources/ios</directory>
                             <options>src/main/resources/platformoptions.xml</options>
+                            <extractLibrarySwf>true</extractLibrarySwf>
                         </platform>
                         <platform>
                             <name>Android-ARM</name>
                             <directory>src/main/resources/android</directory>
+                            <extractLibrarySwf>true</extractLibrarySwf>                        
                         </platform> 
                     </platforms>
                 </configuration>
