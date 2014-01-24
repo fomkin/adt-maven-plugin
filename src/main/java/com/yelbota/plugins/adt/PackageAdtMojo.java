@@ -243,7 +243,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
 
         } catch (IOException e) {
 
-            throw failWith("Can't create ANE directory");
+            throw failWith(String.format("Can't create ANE directory (%s)", e.getMessage()));
         }
 
     }
