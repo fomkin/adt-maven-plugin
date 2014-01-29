@@ -168,4 +168,7 @@
         <developerConnection>scm:git:git@github.com:yelbota/adt-maven-plugin.git</developerConnection>
     </scm>
 
+    <issueManagement>
+    	<system>jira</system>
+    </issueManagement>
 </project>
