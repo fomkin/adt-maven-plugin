@@ -50,7 +50,7 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
 
         Artifact artifact = getAirSdkArtifact();
         File unpackDir = new File(pluginHome, artifact.getArtifactId() + "-" + artifact.getVersion());
-        getLog().debug("unpackDir = " + unpackDir.getAbsolutePath());
+        getLog().debug("AIR SDK unpackDir = " + unpackDir.getAbsolutePath());
         sdkDirectory = unpackDir;
 
         UnpackHelper unpackHelper = new UnpackHelper() {
@@ -62,7 +62,7 @@ public class UnpackAdtMojo extends DependencyAdtMojo {
 
             @Override
             protected void logUnpacking() {
-                getLog().info("Unpacking sdk");
+                getLog().info("Unpacking AIR SDK");
             }
         };
 

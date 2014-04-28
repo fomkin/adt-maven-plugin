@@ -18,7 +18,11 @@ package com.yelbota.plugins.adt;
 import com.yelbota.plugins.adt.exceptions.AdtConfigurationException;
 import com.yelbota.plugins.adt.model.AneModel;
 import com.yelbota.plugins.adt.model.ApplicationDescriptorModel;
+import com.yelbota.plugins.nd.UnpackHelper;
+import com.yelbota.plugins.nd.utils.DefaultUnpackMethods;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -28,6 +32,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLoggerManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,6 +196,8 @@ public class PackageAdtMojo extends CommandAdtMojo {
 
         if (aneDir.list().length > 0)
             args.addAll(getExtDirArguments(aneDir));
+
+	args.addAll(getPlatformSdkArgs());
 
         String[] argsArray = args.toArray(new String[]{});
         getLog().info("Building package " + getFinalName());
@@ -395,7 +403,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
             if (storetype == null || storepass == null || keystore == null)
                 throw new AdtConfigurationException("Signing options (storetype, keystore, storepass) must be defined");
             else if (!keystore.exists())
-                throw new AdtConfigurationException("Keystore file doesn't exists");
+                throw new AdtConfigurationException("Keystore file '" + keystore + "' doesn't exist");
         }
 
         if (getProvisioningProfileRequired()) {
@@ -406,6 +414,68 @@ public class PackageAdtMojo extends CommandAdtMojo {
                 throw new AdtConfigurationException("provisioningProfile not found");
             }
         }
+    }
+
+    private List<String> getPlatformSdkArgs() throws MojoFailureException
+    {
+        List<String> args = new ArrayList<String>();
+
+	if (pluginArtifacts != null) {
+
+	    String groupId = null, artifactId = null;
+
+	    if (target.startsWith("ipa")) {
+		// Only the iOS platform SDK is currently supported
+		groupId = "com.apple.ios";
+		artifactId = "ios-sdk";
+	    }
+
+	    if ((groupId != null) && (artifactId != null))
+	    {
+		for (Artifact dependency : pluginArtifacts) {
+
+		    if (dependency.getGroupId().equals(groupId) &&
+			dependency.getArtifactId().equals(artifactId)) {
+
+			ArtifactResolutionRequest request = new ArtifactResolutionRequest();
+			request.setArtifact(dependency);
+			request.setLocalRepository(localRepository);
+			request.setRemoteRepositories(remoteRepositories);
+			ArtifactResolutionResult resolutionResult = repositorySystem.resolve(request);
+			if (!resolutionResult.isSuccess()) {
+
+			    throw new MojoFailureException("Failed to resolve artifact " + dependency + ": " + resolutionResult);
+			}
+
+			File unpackDir = new File(pluginHome, artifactId + "-" + dependency.getVersion());
+			getLog().debug("platform SDK unpackDir = " + unpackDir.getAbsolutePath());
+
+			UnpackHelper unpackHelper = new UnpackHelper() {
+
+			    @Override
+			    protected void logAlreadyUnpacked() {
+				getLog().debug("Platform SDK already unpacked");
+			    }
+
+			    @Override
+			    protected void logUnpacking() {
+				getLog().info("Unpacking platform sdk");
+			    }
+			};
+
+			ConsoleLoggerManager plexusLoggerManager = new ConsoleLoggerManager();
+			Logger plexusLogger = plexusLoggerManager.getLoggerForComponent(ROLE);
+			DefaultUnpackMethods unpackMethods = new DefaultUnpackMethods(plexusLogger);
+			unpackHelper.unpack(unpackDir, dependency, unpackMethods, getLog());
+
+			args.add("-platformsdk");
+			args.add(unpackDir.getAbsolutePath());
+			break;
+		    }
+		}
+	    }
+        }
+	return args;
     }
 
     private void addIncludeArg(List<String> args, File dir, String name) {
