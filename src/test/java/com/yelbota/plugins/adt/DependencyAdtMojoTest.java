@@ -94,4 +94,12 @@ public class DependencyAdtMojoTest {
         Assert.assertEquals(p, DependencyAdtMojo.TBZ2);
     }
 
+    @Test
+    public void getVersionNumberTest() throws Exception {
+        DependencyAdtMojo adtMojo = new DependencyAdtMojo();
+        Assert.assertEquals(adtMojo.getVersionNumber("3.4"), Float.valueOf("3.4"));
+        Assert.assertEquals(adtMojo.getVersionNumber("4.0"), Float.valueOf("4.0"));
+        Assert.assertEquals(adtMojo.getVersionNumber("14.0.0.76"), Float.valueOf("14.0"));
+    }
+
 }
