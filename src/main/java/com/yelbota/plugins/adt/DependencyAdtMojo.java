@@ -23,6 +23,8 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 @Mojo(name = "dependency")
 public class DependencyAdtMojo extends AbstractAdtMojo {
@@ -104,8 +106,13 @@ public class DependencyAdtMojo extends AbstractAdtMojo {
     }
 
     protected Float getVersionNumber(String version) {
-        String preparedVersionString = version.replaceAll("[^\\d.]", "");
-
-        return Float.valueOf(preparedVersionString);
+        String preparedVersion = version.replaceAll("[^\\d.]", "");
+        Pattern pattern = Pattern.compile("^(\\d+\\.\\d+).*");
+        Matcher matcher = pattern.matcher(preparedVersion);
+        if(!matcher.matches()) {
+            getLog().debug("Invalid version string " + preparedVersion);
+            return null;
+        }
+        return Float.valueOf(matcher.group(1));
     }
 }
