@@ -141,10 +141,19 @@ public class PackageAdtMojo extends CommandAdtMojo {
     /**
     * A boolean value
     *
-    * If true, the "-sampler" option is added to the "adt -package" command
+    * If true, the "-sampler" option is added to the "adt -package" command (iOS only)
     */
     @Parameter(defaultValue = "false")
     public boolean sampler;
+
+     /**
+    * A boolean value
+    *
+    * If true, the "-hideAneLibSymbols yes" option is added to the "adt -package" command (iOS only)
+    */
+    @Parameter(defaultValue = "false")
+    public boolean hideAneLibSymbols;
+
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -233,7 +242,10 @@ public class PackageAdtMojo extends CommandAdtMojo {
                 FileUtils.cleanDirectory(dir);
             else dir.mkdir();
 
-            for (Artifact artifact : project.getDependencyArtifacts()) {
+            getLog().debug("Dependency count: " + project.getArtifacts().size());
+
+            for (Artifact artifact : project.getArtifacts()) {
+                getLog().debug(artifact.toString());
                 if (artifact.getType().equals("ane")) {
                     FileUtils.copyFileToDirectory(artifact.getFile(), dir);
                 }
@@ -269,8 +281,14 @@ public class PackageAdtMojo extends CommandAdtMojo {
             }
         }
 
-        if(sampler && getVersionNumber(sdkVersion) >= 3.4) {
+        Boolean allowIOSFlags = getVersionNumber(sdkVersion) >= 3.4 && isiOSTarget();
+
+        if(sampler && allowIOSFlags) {
             args.add("-sampler");
+        }
+
+        if(hideAneLibSymbols && allowIOSFlags) {
+            args.add("-hideAneLibSymbols yes");
         }
 
         return args;

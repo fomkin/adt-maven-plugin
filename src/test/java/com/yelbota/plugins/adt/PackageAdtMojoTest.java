@@ -90,8 +90,8 @@ public class PackageAdtMojoTest {
         PackageAdtMojo mojo = new PackageAdtMojo();
         mojo.outputDirectory = FileUtils.resolveFile(wd, "target/unit/extDirTest");
         mojo.outputDirectory.mkdirs();
-        mojo.project = new MavenProjectStub();
-        mojo.project.setDependencyArtifacts(artifactList);
+        mojo.project = new FixMavenProjectStub();
+        mojo.project.setArtifacts(artifactList);
 
         File dir = mojo.prepareAneDir();
 
@@ -162,7 +162,7 @@ public class PackageAdtMojoTest {
     public void testSamplerArgument() {
 
         PackageAdtMojo mojo = new PackageAdtMojo();
-        mojo.target = "airi";
+        mojo.target = "ipa-test";
 
         mojo.sdkVersion = "3.6";
         mojo.sampler = true;
@@ -179,6 +179,51 @@ public class PackageAdtMojoTest {
         mojo.sdkVersion = "3.3";
         mojo.sampler = true;
         Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+
+        // Only added for iOS targets
+        mojo.target = "ipa-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-sampler"));
+
+        mojo.target = "apk-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+    }
+
+    @Test
+    public void testHideAnyLibSymbolsArgument() {
+
+        PackageAdtMojo mojo = new PackageAdtMojo();
+        mojo.target = "ipa-test";
+
+        mojo.sdkVersion = "3.6";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = false;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols"));
+
+        mojo.sdkVersion = "3.3";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols"));
+
+        // Only added for iOS targets
+        mojo.target = "ipa-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.target = "apk-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
     }
 
     // TODO test target null
@@ -202,4 +247,18 @@ public class PackageAdtMojoTest {
     }
 */
 
+}
+class FixMavenProjectStub extends MavenProjectStub {
+
+    private Set artifacts;
+
+    @Override
+    public void setArtifacts(Set set) {
+        this.artifacts = set;
+    }
+
+    @Override
+    public Set getArtifacts() {
+        return artifacts;
+    }
 }
