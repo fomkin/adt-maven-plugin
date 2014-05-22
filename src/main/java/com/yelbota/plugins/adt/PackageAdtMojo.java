@@ -250,10 +250,7 @@ public class PackageAdtMojo extends CommandAdtMojo {
                 FileUtils.cleanDirectory(dir);
             else dir.mkdir();
 
-            getLog().debug("Dependency count: " + project.getArtifacts().size());
-
-            for (Artifact artifact : project.getArtifacts()) {
-                getLog().debug(artifact.toString());
+            for (Artifact artifact : project.getDependencyArtifacts()) {
                 if (artifact.getType().equals("ane")) {
                     FileUtils.copyFileToDirectory(artifact.getFile(), dir);
                 }
