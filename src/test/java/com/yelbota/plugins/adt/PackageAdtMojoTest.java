@@ -90,8 +90,8 @@ public class PackageAdtMojoTest {
         PackageAdtMojo mojo = new PackageAdtMojo();
         mojo.outputDirectory = FileUtils.resolveFile(wd, "target/unit/extDirTest");
         mojo.outputDirectory.mkdirs();
-        mojo.project = new FixMavenProjectStub();
-        mojo.project.setArtifacts(artifactList);
+        mojo.project = new MavenProjectStub();
+        mojo.project.setDependencyArtifacts(artifactList);
 
         File dir = mojo.prepareAneDir();
 
@@ -276,19 +276,4 @@ public class PackageAdtMojoTest {
         mojo.target = "airi";
     }
 */
-
-}
-class FixMavenProjectStub extends MavenProjectStub {
-
-    private Set artifacts;
-
-    @Override
-    public void setArtifacts(Set set) {
-        this.artifacts = set;
-    }
-
-    @Override
-    public Set getArtifacts() {
-        return artifacts;
-    }
 }
