@@ -41,6 +41,7 @@
                     <target>native</target>
                     <keystore>certificate.p12</keystore>
                     <storepass>111</storepass>
+                    <tsa>none</tsa>
                     <pluginHome>../ph</pluginHome>
                 </configuration>
             </plugin>

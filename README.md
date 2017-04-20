@@ -74,7 +74,8 @@ Add `adt-maven-plugin` into plugins section
             <target>ipa-debug</target>
             <keystore>certificate.p12</keystore>
             <storepass>******</storepass>
-            
+            <tsa>none</tsa>
+
             <!-- Required for ipa* targets -->
             <provisioningProfile>myapp.mobileprovision</provisioningProfile>
             
