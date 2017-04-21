@@ -145,10 +145,27 @@ public class PackageAdtMojo extends CommandAdtMojo {
     /**
     * A boolean value
     *
-    * If true, the "-sampler" option is added to the "adt -package" command
+    * If true, the "-sampler" option is added to the "adt -package" command (iOS only, AIR 3.4)
     */
     @Parameter(defaultValue = "false")
     public boolean sampler;
+
+    /**
+    * A boolean value
+    *
+    * If true, the "-hideAneLibSymbols yes" option is added to the "adt -package" command (iOS only, AIR 3.4)
+    */
+    @Parameter(defaultValue = "false")
+    public boolean hideAneLibSymbols;
+
+    /**
+    * A boolean value
+    *
+    * If false, the "-useLegacyAOT no" option is added to the "adt -package" command (iOS only, AIR 4.0)
+    */
+    @Parameter(defaultValue = "true")
+    public boolean useLegacyAOT;
+
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -273,8 +290,20 @@ public class PackageAdtMojo extends CommandAdtMojo {
             }
         }
 
-        if(sampler && getVersionNumber(sdkVersion) >= 3.4) {
+        Boolean allowIOSFlags = getVersionNumber(sdkVersion) >= 3.4 && isiOSTarget();
+
+        if(sampler && allowIOSFlags) {
             args.add("-sampler");
+        }
+
+        if(hideAneLibSymbols && allowIOSFlags) {
+            args.add("-hideAneLibSymbols yes");
+        }
+
+        allowIOSFlags = getVersionNumber(sdkVersion) >= 4.0 && isiOSTarget();
+
+        if(!useLegacyAOT && allowIOSFlags) {
+            args.add("-useLegacyAOT no");
         }
 
         return args;

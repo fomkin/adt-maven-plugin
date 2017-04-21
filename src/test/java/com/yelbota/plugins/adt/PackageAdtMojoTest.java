@@ -166,7 +166,7 @@ public class PackageAdtMojoTest {
     public void testSamplerArgument() {
 
         PackageAdtMojo mojo = new PackageAdtMojo();
-        mojo.target = "airi";
+        mojo.target = "ipa-test";
 
         mojo.sdkVersion = "3.6";
         mojo.sampler = true;
@@ -183,6 +183,81 @@ public class PackageAdtMojoTest {
         mojo.sdkVersion = "3.3";
         mojo.sampler = true;
         Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+
+        // Only added for iOS targets
+        mojo.target = "ipa-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-sampler"));
+
+        mojo.target = "apk-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.sampler = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-sampler"));
+    }
+
+    @Test
+    public void testHideAnyLibSymbolsArgument() {
+
+        PackageAdtMojo mojo = new PackageAdtMojo();
+        mojo.target = "ipa-test";
+
+        mojo.sdkVersion = "3.6";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = false;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols"));
+
+        mojo.sdkVersion = "3.3";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols"));
+
+        // Only added for iOS targets
+        mojo.target = "ipa-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+
+        mojo.target = "apk-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.hideAneLibSymbols = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-hideAneLibSymbols yes"));
+    }
+
+    @Test
+    public void testuseLegacyAOTArgument() {
+
+        PackageAdtMojo mojo = new PackageAdtMojo();
+        mojo.target = "ipa-test";
+
+        // only added for 4.0 and higher
+        mojo.sdkVersion = "3.6";
+        mojo.useLegacyAOT = false;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-useLegacyAOT no"));
+
+        mojo.sdkVersion = "4.0";
+        mojo.useLegacyAOT = false;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-useLegacyAOT no"));
+        mojo.sdkVersion = "4.0";
+        mojo.useLegacyAOT = true;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-useLegacyAOT no"));
+
+        // Only added for iOS targets
+        mojo.target = "ipa-debug";
+        mojo.sdkVersion = "4.0";
+        mojo.useLegacyAOT = false;
+        Assert.assertTrue(mojo.getPackageArguments().contains("-useLegacyAOT no"));
+
+        mojo.target = "apk-debug";
+        mojo.sdkVersion = "3.4";
+        mojo.useLegacyAOT = false;
+        Assert.assertFalse(mojo.getPackageArguments().contains("-useLegacyAOT no"));
     }
 
     // TODO test target null
@@ -205,5 +280,4 @@ public class PackageAdtMojoTest {
         mojo.target = "airi";
     }
 */
-
 }
