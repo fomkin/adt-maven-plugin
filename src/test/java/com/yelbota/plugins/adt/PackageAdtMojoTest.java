@@ -51,6 +51,7 @@ public class PackageAdtMojoTest {
         mojo.storetype = null;
         mojo.keystore = null;
         mojo.storepass = null;
+        mojo.tsa = null;
 
         try {
             mojo.validateCertificate();
@@ -112,6 +113,7 @@ public class PackageAdtMojoTest {
         mojo.storetype = "pkcs12";
         mojo.keystore = FileUtils.resolveFile(wd, "src/test/resources/unit/certificate.p12");
         mojo.storepass = "password";
+        mojo.tsa = "none";
 
         try {
             mojo.validateCertificate();
@@ -120,6 +122,7 @@ public class PackageAdtMojoTest {
         }
 
         mojo.storepass = null;
+        mojo.tsa = null;
 
         try {
             mojo.validateCertificate();
@@ -130,6 +133,7 @@ public class PackageAdtMojoTest {
 
         mojo.keystore = null;
         mojo.storepass = "password";
+        mojo.tsa = "none";
 
         try {
             mojo.validateCertificate();
