@@ -150,6 +150,14 @@ public class PackageAdtMojo extends CommandAdtMojo {
     @Parameter(defaultValue = "false")
     public boolean sampler;
 
+    /**
+    * A boolean value
+    *
+    * If false, the "-useLegacyAOT=no" option is added to the "adt -package" command
+    */
+    @Parameter(defaultValue = "true")
+    public boolean useLegacyAOT;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -275,6 +283,17 @@ public class PackageAdtMojo extends CommandAdtMojo {
 
         if(sampler && getVersionNumber(sdkVersion) >= 3.4) {
             args.add("-sampler");
+        }
+
+        if(getVersionNumber(sdkVersion) >= 14.0) {
+            args.add("-useLegacyAOT");
+            if(useLegacyAOT) {
+                args.add("yes");
+            }   
+            else {
+                args.add("no");
+            }         
+            
         }
 
         return args;
